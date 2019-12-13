@@ -1,18 +1,62 @@
 <template>
     <div class="emptyTrayManage">
-        <el-button type="primary" @click="openDialog3">初始化</el-button>
+        <el-button type="primary" 
+            class="el-button el-button--primary el-button--small"
+            @click="openDialog3">初始化</el-button>
+        <el-button
+            class="el-button el-button--primary el-button--small"
+            type="primary"
+            icon="el-icon-download"
+            @click="downloadTemplate"
+        >下载模板</el-button>
+        <el-form :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="托盘ID">
+                <el-input v-model="search.rfid"> </el-input>
+            </el-form-item>
+
+            <el-form-item label="健康状态">
+                <el-select v-model="search.rfidHealth" placeholder="请选择健康状态">
+                    <el-option label="良好" value="0"></el-option>
+                    <el-option label="报损" value="1"></el-option>
+                    <el-option label="报废" value="2"></el-option>
+                    <el-option label="冻结" value="3"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="入库时间">
+                <el-date-picker
+                    v-model="checkedDate"
+                    type="daterange"
+                    value-format="yyyy-MM-dd"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+                    </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+                <el-button
+                    type="primary"
+                    icon="el-icon-search"
+                    class="searchBtn"
+                    @click="handleList"
+                >搜索</el-button>
+            </el-form-item>
+        </el-form>
         <el-table :data="tableData" style="width: 100%" border>
             <el-table-column type="index" label="空托库存清单" align="center">
                 <el-table-column type="index" label="序号" width="50" align="center" />
-                <el-table-column label="入库时间" prop="initTime" align="center" />
-                <el-table-column label="托盘ID" prop="rfid" align="center" />
-                <el-table-column label="托盘流转状态" prop="rfidStatusName" align="center" />
-                <el-table-column label="托盘健康状态" prop="rfidHealthName" align="center" />
-                <el-table-column label="最后更新时间" prop="updateTime" align="center" />
+                <el-table-column label="入库时间" prop="initTime" align="center" width="170" />
+                <el-table-column label="托盘ID" prop="rfid" align="center" width="130" />
+                <el-table-column label="托盘流转状态" prop="rfidStatusName" align="center" width="70" />
+                <el-table-column label="托盘健康状态" prop="rfidHealthName" align="center" width="70" />
+                <el-table-column label="最后更新时间" prop="updateTime" align="center" width="160" />
                 <el-table-column label="修改人" prop="updateBy" align="center" />
                 <el-table-column label="操作" fixed="right" align="center" width="262">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="openDialog(scope.row)">报损</el-button>
+                        <el-button
+                            type="primary"
+                            @click="openDialog(scope.row)"
+                            :disabled="!(parseInt(scope.row.rfidHealth) ===0)"
+                        >报损</el-button>
                         <el-button type="primary" @click="openDialog2(scope.row)">报废</el-button>
                         <el-button type="primary" @click="forzenRowFun(scope.row)">冻结</el-button>
                     </template>
@@ -23,8 +67,8 @@
             background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="pageNum"
-            :page-size="pageSize"
+            :current-page="search.pageNum"
+            :page-size="search.pageSize"
             :total="total"
             :page-sizes="[10, 20, 30, 40]"
             layout="total, sizes, prev, pager, next, jumper"
@@ -82,24 +126,21 @@
 import {
     getStockLists,
     scrapOrLossTrayInfo,
-    forzenRow
+    forzenRow,
+    exprotTemplate
 } from '@/api/emptyTrayManage.js'
 import DIC from '@/api/dic.js'
+
 export default {
     data() {
         return {
             tableData: [],
-            enum_rfidStatus: DIC.rfidStatus,
-            enum_rfidType: DIC.rfidType,
-            rfidStatusVal: 0,
-            rfidTypeVal: 0,
-            pageNum: 1,
-            pageSize: 10,
             total: 0,
             dialogVisible: false,
             dialogVisible2: false,
             url: '/trayInfo/importData',
             fileList: [],
+            checkedDate:[],
             rules: [
                 {
                     required: true,
@@ -107,10 +148,20 @@ export default {
                 }
             ],
             formObj: {
-                rfid: ''
+                rfid: '',
+                remarks: ''
             },
             formObj2: {
-                rfid: ''
+                rfid: '',
+                remarks: ''
+            },
+            search:{
+                rfid:'',
+                rfidHealth:'',
+                startTime:'',
+                endTime:'',
+                pageNum: 1,
+                pageSize: 10,
             },
             dialogVisible3: false
         }
@@ -121,20 +172,20 @@ export default {
     },
     methods: {
         handleCurrentChange(val) {
-            this.pageNum = val
+            this.search.pageNum = val
             this.handleList()
         },
         handleSizeChange(val) {
-            this.pageSize = val
+            this.search.pageSize = val
             this.handleList()
         },
         handleList() {
-            getStockLists({
-                rfidStatus: this.rfidStatusVal,
-                rfidType: this.rfidTypeVal,
-                pageNum: this.pageNum,
-                pageSize: this.pageSize
-            }).then(res => {
+            if(this.checkedDate.length===2){
+                this.search.startTime=this.checkedDate[0]
+                this.search.endTime=this.checkedDate[1]
+
+            }
+            getStockLists(this.search).then(res => {
                 console.log(res)
                 this.tableData = res.data.rows
                 this.total = res.data.total
@@ -174,7 +225,10 @@ export default {
                 })
             } else {
                 this.dialogVisible = true
-                this.formObj.rfid = row.rfid
+                this.formObj = {
+                    rfid: row.rfid,
+                    remarks: ''
+                }
             }
         },
         reportLoss() {
@@ -197,7 +251,10 @@ export default {
                 })
             } else {
                 this.dialogVisible2 = true
-                this.formObj2.rfid = row.rfid
+                this.formObj2 = {
+                    rfid: row.rfid,
+                    remarks: ''
+                }
             }
         },
         reportFee() {
@@ -229,7 +286,20 @@ export default {
                     this.handleList()
                 })
             })
-        }
+        },
+           /** 下载模板操作 */
+        downloadTemplate() {
+            exprotTemplate().then(response => {
+                // debugger
+                console.log(response.data.msg)
+                this.download(response.data.msg);
+            });
+        },
+        download(fileName) {
+            window.location.href ="/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true
+        },
+
+     
     }
 }
 </script>

@@ -4,7 +4,7 @@
         <div class="search">
             <span></span>
             <div>
-                <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
+                托盘流转状态:<el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
                     <el-option
                         v-for="item in enum_rfidStatus"
                         :key="item.value"
@@ -12,7 +12,7 @@
                         :value="item.value"
                     ></el-option>
                 </el-select>
-                <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
+                托盘类型:<el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
                     <el-option
                         v-for="item in enum_rfidType"
                         :key="item.value"
@@ -34,18 +34,17 @@
             :data="tableData"
             tooltip-effect="dark"
             highlight-current-row
-            @row-click="rowClick"
-            border 
+            border
         >
             <!-- @current-change ="rowCheckedChange" -->
             <el-table-column type="index" label="序号" width="50"></el-table-column>
-            <el-table-column prop="factoryCode" label="工厂编码"></el-table-column>
-            <el-table-column prop="factoryName" label="工厂名称"></el-table-column>
-            <el-table-column prop="rfid" label="托盘ID"></el-table-column>
-            <el-table-column prop="rfidStatusName" label="托盘状态"></el-table-column>
-            <el-table-column prop="rfidTypeName" label="托盘类型"></el-table-column>
-            <el-table-column prop="currentCode" label="一次绑定(包装喷码)"></el-table-column>
-            <el-table-column prop="orderNo" label="二次绑定(交货单号)"></el-table-column>
+            <el-table-column prop="factoryCode" label="工厂编码"  width="90"></el-table-column>
+            <el-table-column prop="factoryName" label="工厂名称" width="90" ></el-table-column>
+            <el-table-column prop="rfid" label="托盘ID" width="150" ></el-table-column>
+            <el-table-column prop="rfidStatusName" label="托盘状态"  width="90"></el-table-column>
+            <el-table-column prop="rfidTypeName" label="托盘类型"  width="90"></el-table-column>
+            <el-table-column prop="currentCode" label="一次绑定(包装喷码)"  width="180"></el-table-column>
+            <el-table-column prop="orderNo" label="二次绑定(交货单号)" ></el-table-column>
             <el-table-column prop="initTime" label="托盘进场时间"></el-table-column>
         </el-table>
         <div style="width:90%;">
@@ -65,7 +64,7 @@
 </template>
 
 <script>
-import { getTrayLists, forzenRow, updateRow } from '@/api/trayManage'
+import { getTrayLists, updateRow } from '@/api/trayManage'
 import DIC from '@/api/dic.js'
 export default {
     data() {
@@ -112,7 +111,6 @@ export default {
                 }
             })
         },
-    
         submitForm() {
             updateRow(this.formObj).then(res => {
                 this.dialogVisible = false
@@ -121,9 +119,8 @@ export default {
         },
         searchByTypeAndStatus() {
             this.handleList()
-        },
-  
-     }
+        }
+    }
 }
 </script>
 

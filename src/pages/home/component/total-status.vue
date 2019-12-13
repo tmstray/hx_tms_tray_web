@@ -330,9 +330,9 @@ export default {
             getProductLineLists().then(res => {
                 this.productLineLists = res.data.data
                 this.formObj = {
-                    lineId: res.data.data[4].Z_ID,
-                    type: res.data.data[4].Z_Stock,
-                    packageType: res.data.data[4].Z_PeerWeight
+                    lineId: res.data.data[3].Z_ID,
+                    type: res.data.data[3].Z_Stock,
+                    packageType: res.data.data[3].Z_PeerWeight
                 }
                 if (this.formObj.packageType !== 0) {
                     this.formObj.packageType += 'kg包装'
@@ -350,7 +350,7 @@ export default {
         },
         // 获取喷码规则
         getPrinterRules() {
-            console.log(this.formObj.lineId)
+            // console.log(this.formObj.lineId)
             getRules({
                 zId: this.formObj.lineId
             }).then(res => {

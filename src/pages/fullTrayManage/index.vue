@@ -1,5 +1,35 @@
 <template>
     <div class="fullTrayManage">
+        <el-form :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="托盘ID">
+                <el-input v-model="search.rfid"></el-input>
+            </el-form-item>
+
+            <el-form-item label="喷码">
+                <el-input v-model="search.currentCode"></el-input>
+            </el-form-item>
+            <el-form-item label="交货单">
+                <el-input v-model="search.orderNo"></el-input>
+            </el-form-item>
+            <el-form-item label="入库时间">
+                <el-date-picker
+                    v-model="checkedDate"
+                    type="daterange"
+                    value-format="yyyy-MM-dd"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+                <el-button
+                    type="primary"
+                    icon="el-icon-search"
+                    class="searchBtn"
+                    @click="handleList"
+                >搜索</el-button>
+            </el-form-item>
+        </el-form>
         <el-table :data="tableData" style="width: 100%" height="550">
             <el-table-column type="index" label="满托库存清单" align="center">
                 <el-table-column type="index" label="序号" />
@@ -22,8 +52,8 @@
             background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="pageNum"
-            :page-size="pageSize"
+            :current-page="search.pageNum"
+            :page-size="search.pageSize"
             :total="total"
             :page-sizes="[10, 20, 30, 40]"
             layout="total, sizes, prev, pager, next, jumper"
@@ -59,9 +89,16 @@ export default {
             enum_rfidType: DIC.rfidType,
             rfidStatusVal: 0,
             rfidTypeVal: 0,
-            pageNum: 1,
-            pageSize: 10,
             total: 0,
+            search: {
+                currentCode: '',
+                rfid: '',
+                startTime: '',
+                endTime: '',
+                pageNum: 1,
+                pageSize: 10
+            },
+            checkedDate:[],
             dialogVisible: false,
             formObj: {
                 currentCode: '',
@@ -81,20 +118,20 @@ export default {
     },
     methods: {
         handleCurrentChange(val) {
-            this.pageNum = val
+            this.search.pageNum = val
             this.handleList()
         },
         handleSizeChange(val) {
-            this.pageSize = val
+            this.search.pageSize = val
             this.handleList()
         },
         handleList() {
-            getStockLists({
-                rfidStatus: this.rfidStatusVal,
-                rfidType: this.rfidTypeVal,
-                pageNum: this.pageNum,
-                pageSize: this.pageSize
-            }).then(res => {
+            if(this.checkedDate.length===2){
+                this.search.startTime=this.checkedDate[0]
+                this.search.endTime=this.checkedDate[1]
+
+            }
+            getStockLists(this.search).then(res => {
                 console.log(res)
                 this.tableData = res.data.rows
                 this.total = res.data.total
