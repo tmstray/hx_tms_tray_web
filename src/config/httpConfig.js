@@ -10,33 +10,33 @@ var instance = axios.create({
     baseURL,
     validateStatus(status) {
         switch (status) {
-        case 400:
-            Message.error('请求出错')
-            break
-        case 401:
-            Message.warning({
-                message: '授权失败，请重新登录'
-            })
-            store.commit('LOGIN_OUT')
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
-            return
-        case 403:
-            Message.warning({
-                message: '拒绝访问'
-            })
-            break
-        case 404:
-            Message.warning({
-                message: '请求错误,未找到该资源'
-            })
-            break
-        case 500:
-            Message.warning({
-                message: '服务端错误'
-            })
-            break
+            case 400:
+                Message.error('请求出错')
+                break
+            case 401:
+                Message.warning({
+                    message: '授权失败，请重新登录'
+                })
+                store.commit('LOGIN_OUT')
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000)
+                return
+            case 403:
+                Message.warning({
+                    message: '拒绝访问'
+                })
+                break
+            case 404:
+                Message.warning({
+                    message: '请求错误,未找到该资源'
+                })
+                break
+            case 500:
+                Message.warning({
+                    message: '服务端错误'
+                })
+                break
         }
         return status >= 200 && status <= 500
     }
@@ -134,9 +134,9 @@ http.get = function (url, params, options) {
                 params
             }, options)
             .then(response => {
+                loading = document.getElementById('ajaxLoading')
+                loading.style.display = 'none'
                 if (response.data.code === 200) {
-                    loading = document.getElementById('ajaxLoading')
-                    loading.style.display = 'none'
                     resolve(response)
                 } else {
                     // Message.error({
@@ -146,6 +146,8 @@ http.get = function (url, params, options) {
                 }
             })
             .catch(e => {
+                loading = document.getElementById('ajaxLoading')
+                loading.style.display = 'none'
                 console.log(e)
             })
     })
