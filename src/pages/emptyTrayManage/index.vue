@@ -296,7 +296,7 @@ export default {
             });
         },
         download(fileName) {
-            window.location.href ="/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true
+            window.location.href ="http://10.248.61.27:9081/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true
         },
 
      
