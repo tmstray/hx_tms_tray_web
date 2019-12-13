@@ -149,7 +149,8 @@ export default {
                 meterielCode: result.meterielCode,
                 meterielDesc: result.meterielDesc,
                 factoryCode: result.factoryCode,
-                factoryName: result.factoryName
+                factoryName: result.factoryName,
+                bindingTime:result.bindingTime
             }
         },
         submitForm() {
