@@ -1,8 +1,10 @@
 <template>
     <div class="emptyTrayManage">
-        <el-button type="primary" 
+        <el-button
+            type="primary"
             class="el-button el-button--primary el-button--small"
-            @click="openDialog3">初始化</el-button>
+            @click="openDialog3"
+        >初始化</el-button>
         <el-button
             class="el-button el-button--primary el-button--small"
             type="primary"
@@ -10,11 +12,11 @@
             @click="downloadTemplate"
         >下载模板</el-button>
         <el-form :inline="true" :model="search" class="demo-form-inline">
-            <el-form-item label="托盘ID">
-                <el-input v-model="search.rfid"> </el-input>
+            <el-form-item label="托盘ID:">
+                <el-input v-model="search.rfid"></el-input>
             </el-form-item>
 
-            <el-form-item label="健康状态">
+            <el-form-item label="健康状态:">
                 <el-select v-model="search.rfidHealth" placeholder="请选择健康状态">
                     <el-option label="良好" value="0"></el-option>
                     <el-option label="报损" value="1"></el-option>
@@ -22,15 +24,15 @@
                     <el-option label="冻结" value="3"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="入库时间">
+            <el-form-item label="入库时间:">
                 <el-date-picker
                     v-model="checkedDate"
                     type="daterange"
                     value-format="yyyy-MM-dd"
                     range-separator="至"
                     start-placeholder="开始日期"
-                    end-placeholder="结束日期">
-                    </el-date-picker>
+                    end-placeholder="结束日期"
+                ></el-date-picker>
             </el-form-item>
             <el-form-item>
                 <el-button
@@ -140,7 +142,7 @@ export default {
             dialogVisible2: false,
             url: '/trayInfo/importData',
             fileList: [],
-            checkedDate:[],
+            checkedDate: [],
             rules: [
                 {
                     required: true,
@@ -155,13 +157,13 @@ export default {
                 rfid: '',
                 remarks: ''
             },
-            search:{
-                rfid:'',
-                rfidHealth:'',
-                startTime:'',
-                endTime:'',
+            search: {
+                rfid: '',
+                rfidHealth: '',
+                startTime: '',
+                endTime: '',
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 10
             },
             dialogVisible3: false
         }
@@ -180,10 +182,9 @@ export default {
             this.handleList()
         },
         handleList() {
-            if(this.checkedDate.length===2){
-                this.search.startTime=this.checkedDate[0]
-                this.search.endTime=this.checkedDate[1]
-
+            if (this.checkedDate.length === 2) {
+                this.search.startTime = this.checkedDate[0]
+                this.search.endTime = this.checkedDate[1]
             }
             getStockLists(this.search).then(res => {
                 console.log(res)
@@ -287,19 +288,20 @@ export default {
                 })
             })
         },
-           /** 下载模板操作 */
+        /** 下载模板操作 */
         downloadTemplate() {
             exprotTemplate().then(response => {
-                // debugger
-                console.log(response.data.msg)
-                this.download(response.data.msg);
-            });
+                this.download(response.data.msg)
+            })
         },
         download(fileName) {
-            window.location.href ="http://10.248.61.27:9081/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true
-        },
-
-     
+            //系统上线时需要改为服务器的路径：TODO
+            window.location.href =
+                'http://10.248.61.27:9081/common/download?fileName=' +
+                encodeURI(fileName) +
+                '&delete=' +
+                true
+        }
     }
 }
 </script>

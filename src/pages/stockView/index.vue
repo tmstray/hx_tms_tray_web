@@ -1,32 +1,37 @@
 <template>
     <div class="stockView">
-        <h4>库存显示报表</h4>
-        <div class="search">
+        <div class="search" align="right">
             <div></div>
-            <div>
-                <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
-                    <el-option
-                        v-for="item in enum_rfidStatus"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
-                </el-select>
-                <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
-                    <el-option
-                        v-for="item in enum_rfidType"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
-                </el-select>
-                <el-button
-                    type="primary"
-                    icon="el-icon-search"
-                    class="searchBtn"
-                    @click="searchByTypeAndStatus"
-                >搜索</el-button>
-            </div>
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item label="托盘流转状态:">
+                    <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
+                        <el-option
+                            v-for="item in enum_rfidStatus"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="托盘类型:">
+                    <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
+                        <el-option
+                            v-for="item in enum_rfidType"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        type="primary"
+                        icon="el-icon-search"
+                        class="searchBtn"
+                        @click="handleList"
+                    >搜索</el-button>
+                </el-form-item>
+            </el-form>
         </div>
         <el-table :data="tableData" style="width: 100%" border>
             <el-table-column type="index" label="序号" width="50"></el-table-column>

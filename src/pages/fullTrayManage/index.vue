@@ -1,17 +1,17 @@
 <template>
     <div class="fullTrayManage">
         <el-form :inline="true" :model="search" class="demo-form-inline">
-            <el-form-item label="托盘ID">
+            <el-form-item label="托盘ID:">
                 <el-input v-model="search.rfid"></el-input>
             </el-form-item>
 
-            <el-form-item label="喷码">
+            <el-form-item label="包装喷码:">
                 <el-input v-model="search.currentCode"></el-input>
             </el-form-item>
-            <el-form-item label="交货单">
+            <el-form-item label="交货单:">
                 <el-input v-model="search.orderNo"></el-input>
             </el-form-item>
-            <el-form-item label="入库时间">
+            <el-form-item label="入库时间:">
                 <el-date-picker
                     v-model="checkedDate"
                     type="daterange"

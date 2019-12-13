@@ -1,32 +1,37 @@
 <template>
     <div class="trayManage">
-        <h4>托盘管理报表</h4>
         <div class="search">
-            <span></span>
-            <div>
-                托盘流转状态:<el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
-                    <el-option
-                        v-for="item in enum_rfidStatus"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
-                </el-select>
-                托盘类型:<el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
-                    <el-option
-                        v-for="item in enum_rfidType"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
-                </el-select>
-                <el-button
-                    type="primary"
-                    icon="el-icon-search"
-                    class="searchBtn"
-                    @click="searchByTypeAndStatus"
-                >搜索</el-button>
-            </div>
+            <div></div>
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item label="托盘流转状态:">
+                    <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
+                        <el-option
+                            v-for="item in enum_rfidStatus"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="托盘类型:">
+                    <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
+                        <el-option
+                            v-for="item in enum_rfidType"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        type="primary"
+                        icon="el-icon-search"
+                        class="searchBtn"
+                        @click="handleList"
+                    >搜索</el-button>
+                </el-form-item>
+            </el-form>
         </div>
         <el-table
             style="width:100%"
@@ -38,13 +43,13 @@
         >
             <!-- @current-change ="rowCheckedChange" -->
             <el-table-column type="index" label="序号" width="50"></el-table-column>
-            <el-table-column prop="factoryCode" label="工厂编码"  width="90"></el-table-column>
-            <el-table-column prop="factoryName" label="工厂名称" width="90" ></el-table-column>
-            <el-table-column prop="rfid" label="托盘ID" width="150" ></el-table-column>
-            <el-table-column prop="rfidStatusName" label="托盘状态"  width="90"></el-table-column>
-            <el-table-column prop="rfidTypeName" label="托盘类型"  width="90"></el-table-column>
-            <el-table-column prop="currentCode" label="一次绑定(包装喷码)"  width="180"></el-table-column>
-            <el-table-column prop="orderNo" label="二次绑定(交货单号)" ></el-table-column>
+            <el-table-column prop="factoryCode" label="工厂编码" width="90"></el-table-column>
+            <el-table-column prop="factoryName" label="工厂名称" width="90"></el-table-column>
+            <el-table-column prop="rfid" label="托盘ID" width="150"></el-table-column>
+            <el-table-column prop="rfidStatusName" label="托盘状态" width="90"></el-table-column>
+            <el-table-column prop="rfidTypeName" label="托盘类型" width="90"></el-table-column>
+            <el-table-column prop="currentCode" label="一次绑定(包装喷码)" width="180"></el-table-column>
+            <el-table-column prop="orderNo" label="二次绑定(交货单号)"></el-table-column>
             <el-table-column prop="initTime" label="托盘进场时间"></el-table-column>
         </el-table>
         <div style="width:90%;">
