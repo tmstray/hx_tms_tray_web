@@ -30,7 +30,7 @@
                 >搜索</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="tableData" style="width: 100%" height="550">
+        <el-table :data="tableData" style="width: 100%" border>
             <el-table-column type="index" label="满托库存清单" align="center">
                 <el-table-column type="index" label="序号" />
                 <el-table-column label="入库时间" prop="initTime" width="160" center />
