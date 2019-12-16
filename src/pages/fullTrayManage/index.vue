@@ -43,7 +43,9 @@
                 <el-table-column label="修改人" prop="updateBy" />
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="handleUpdate(scope.row)">修改</el-button>
+                        <el-button type="primary" @click="handleUpdate(scope.row)"  
+                        :disabled="((parseInt(scope.row.rfidStatus)===3 
+                                    ||parseInt(scope.row.rfidStatus)===4))">修改</el-button>
                     </template>
                 </el-table-column>
             </el-table-column>
