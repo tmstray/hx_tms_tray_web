@@ -116,6 +116,7 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 value-format="yyyy-MM-dd"
+                :unlink-panels="false"
             ></el-date-picker>
             <el-button type="primary" @click="handleLists">查询</el-button>
         </div>

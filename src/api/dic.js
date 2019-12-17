@@ -5,7 +5,7 @@ export default {
             value: 0
         },
         {
-            label: '满盘',
+            label: '满托',
             value: 1
         },
         {

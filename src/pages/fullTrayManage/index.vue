@@ -19,6 +19,7 @@
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
+                    :unlink-panels="false"
                 ></el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -43,9 +44,12 @@
                 <el-table-column label="修改人" prop="updateBy" />
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="handleUpdate(scope.row)"  
-                        :disabled="((parseInt(scope.row.rfidStatus)===3 
-                                    ||parseInt(scope.row.rfidStatus)===4))">修改</el-button>
+                        <el-button
+                            type="primary"
+                            @click="handleUpdate(scope.row)"
+                            :disabled="((parseInt(scope.row.rfidStatus)===3 
+                                    ||parseInt(scope.row.rfidStatus)===4))"
+                        >修改</el-button>
                     </template>
                 </el-table-column>
             </el-table-column>
@@ -100,7 +104,7 @@ export default {
                 pageNum: 1,
                 pageSize: 10
             },
-            checkedDate:[],
+            checkedDate: [],
             dialogVisible: false,
             formObj: {
                 currentCode: '',
@@ -128,10 +132,9 @@ export default {
             this.handleList()
         },
         handleList() {
-            if(this.checkedDate.length===2){
-                this.search.startTime=this.checkedDate[0]
-                this.search.endTime=this.checkedDate[1]
-
+            if (this.checkedDate.length === 2) {
+                this.search.startTime = this.checkedDate[0]
+                this.search.endTime = this.checkedDate[1]
             }
             getStockLists(this.search).then(res => {
                 console.log(res)
@@ -152,7 +155,7 @@ export default {
                 meterielDesc: result.meterielDesc,
                 factoryCode: result.factoryCode,
                 factoryName: result.factoryName,
-                bindingTime:result.bindingTime
+                bindingTime: result.bindingTime
             }
         },
         submitForm() {

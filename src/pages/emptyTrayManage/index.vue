@@ -18,6 +18,7 @@
 
             <el-form-item label="健康状态:">
                 <el-select v-model="search.rfidHealth" placeholder="请选择健康状态">
+                    <el-option label="请选择" value=""></el-option>
                     <el-option label="良好" value="0"></el-option>
                     <el-option label="报损" value="1"></el-option>
                     <el-option label="报废" value="2"></el-option>
@@ -32,6 +33,7 @@
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
+                    :unlink-panels="false"
                 ></el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -52,6 +54,7 @@
                 <el-table-column label="托盘健康状态" prop="rfidHealthName" align="center" width="70" />
                 <el-table-column label="最后更新时间" prop="updateTime" align="center" width="160" />
                 <el-table-column label="修改人" prop="updateBy" align="center" />
+                <el-table-column label="描述信息" prop="remarks" align="center" />
                 <el-table-column label="操作" fixed="right" align="center" width="262">
                     <template slot-scope="scope">
                         <el-button
@@ -205,7 +208,6 @@ export default {
         handleSuccess(response, file, fileList) {
             if (response.code !== 200) {
                 this.$message.error(response.msg)
-
                 return
             }
             this.$message.success(response.msg)
@@ -240,6 +242,7 @@ export default {
             }).then(res => {
                 this.$message.success('报损操作成功！')
                 this.dialogVisible = false
+                 this.handleList()
             })
             this.handleList()
         },
@@ -262,10 +265,11 @@ export default {
             scrapOrLossTrayInfo({
                 rfid: this.formObj2.rfid,
                 rfidHealth: 2,
-                remarks: this.formObj.remarks
+                remarks: this.formObj2.remarks
             }).then(res => {
                 this.$message.success('报废操作成功！')
                 this.dialogVisible2 = false
+                this.handleList()
             })
             this.handleList()
         },
@@ -295,7 +299,7 @@ export default {
             })
         },
         download(fileName) {
-            //系统上线时需要改为服务器的路径：TODO
+            /** 系统上线时需要改为服务器的路径：TODO */
             window.location.href =
                 'http://10.248.61.27:9081/common/download?fileName=' +
                 encodeURI(fileName) +
