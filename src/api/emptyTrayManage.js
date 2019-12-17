@@ -3,7 +3,7 @@ const urlLists = {
     getStockLists: '/trayInfo/emptyTrayList',
     scrapOrLossTrayInfo: '/trayInfo/scrapOrLossTrayInfo',
     forzenRow: '/trayInfo/freeZeTrayInfo',
-    exprotTemplate: 'http://10.248.61.27:9081/trayInfo/importTemplate'
+    exprotTemplate: '/trayInfo/importTemplate'
 }
 export const getStockLists = (params) => {
     return http.post(urlLists.getStockLists, params)

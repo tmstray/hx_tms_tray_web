@@ -18,7 +18,7 @@
 
             <el-form-item label="健康状态:">
                 <el-select v-model="search.rfidHealth" placeholder="请选择健康状态">
-                    <el-option label="请选择" value=""></el-option>
+                    <el-option label="请选择" value></el-option>
                     <el-option label="良好" value="0"></el-option>
                     <el-option label="报损" value="1"></el-option>
                     <el-option label="报废" value="2"></el-option>
@@ -136,6 +136,9 @@ import {
 } from '@/api/emptyTrayManage.js'
 import DIC from '@/api/dic.js'
 
+ /** urlPort ：导入导出模板设置访问URL 上线时需要设置为服务器：TODO */
+const urlPort = "http://10.248.61.27:9081"
+
 export default {
     data() {
         return {
@@ -143,7 +146,7 @@ export default {
             total: 0,
             dialogVisible: false,
             dialogVisible2: false,
-            url: '/trayInfo/importData',
+            url: urlPort + '/trayInfo/importData',
             fileList: [],
             checkedDate: [],
             rules: [
@@ -242,7 +245,7 @@ export default {
             }).then(res => {
                 this.$message.success('报损操作成功！')
                 this.dialogVisible = false
-                 this.handleList()
+                this.handleList()
             })
             this.handleList()
         },
@@ -296,12 +299,16 @@ export default {
         downloadTemplate() {
             exprotTemplate().then(response => {
                 this.download(response.data.msg)
+            }).then(res => {
+                    this.$message.success('请求路径有误！')
+                    this.handleList()
             })
         },
         download(fileName) {
             /** 系统上线时需要改为服务器的路径：TODO */
             window.location.href =
-                'http://10.248.61.27:9081/common/download?fileName=' +
+                this.urlPort +
+                '/common/download?fileName=' +
                 encodeURI(fileName) +
                 '&delete=' +
                 true
