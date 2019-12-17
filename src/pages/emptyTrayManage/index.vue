@@ -137,8 +137,8 @@ import {
 import DIC from '@/api/dic.js'
 
 /** urlPort ：导入导出模板设置访问URL 上线时需要设置为服务器：TODO */
-// const urlPort = 'http://10.248.61.27:9081'
-const urlPort = 'http://10.248.10.141:9081'
+const urlPort = 'http://10.248.61.27:9081'
+// const urlPort = 'http://10.248.10.141:9081'
 
 export default {
     data() {
