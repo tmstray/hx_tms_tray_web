@@ -136,8 +136,8 @@ import {
 } from '@/api/emptyTrayManage.js'
 import DIC from '@/api/dic.js'
 
- /** urlPort ：导入导出模板设置访问URL 上线时需要设置为服务器：TODO */
-const urlPort = "http://10.248.61.27:9081"
+/** urlPort ：导入导出模板设置访问URL 上线时需要设置为服务器：TODO */
+const urlPort = 'http://10.248.61.27:9081'
 
 export default {
     data() {
@@ -297,17 +297,15 @@ export default {
         },
         /** 下载模板操作 */
         downloadTemplate() {
-            exprotTemplate().then(response => {
-                this.download(response.data.msg)
-            }).then(res => {
-                    this.$message.success('请求路径有误！')
-                    this.handleList()
-            })
+            exprotTemplate()
+                .then(response => {
+                    this.download(response.data.msg)
+                })
         },
         download(fileName) {
             /** 系统上线时需要改为服务器的路径：TODO */
             window.location.href =
-                this.urlPort +
+                urlPort +
                 '/common/download?fileName=' +
                 encodeURI(fileName) +
                 '&delete=' +
