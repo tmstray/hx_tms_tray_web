@@ -12,7 +12,7 @@
                 <el-input v-model="search.orderNo"></el-input>
             </el-form-item>
             <el-form-item label="入库时间:">
-                <el-date-picker
+                <!-- <el-date-picker
                     v-model="checkedDate"
                     type="daterange"
                     value-format="yyyy-MM-dd"
@@ -20,6 +20,23 @@
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     :unlink-panels="false"
+                ></el-date-picker>-->
+                <el-date-picker
+                    v-model="search.startTime"
+                    type="date"
+                    placeholder="选择开始日期"
+                    @change="validateEndTime"
+                    :picker-options="pickerOptions"
+                    value-format="yyyy-MM-dd"
+                ></el-date-picker>
+                至
+                <el-date-picker
+                    v-model="search.endTime"
+                    type="date"
+                    placeholder="选择结束日期"
+                    @change="validateStartTime"
+                    :picker-options="pickerOptions"
+                    value-format="yyyy-MM-dd"
                 ></el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -106,6 +123,11 @@ export default {
             },
             checkedDate: [],
             dialogVisible: false,
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now()
+                }
+            },
             formObj: {
                 currentCode: '',
                 orderNo: ''
@@ -132,12 +154,7 @@ export default {
             this.handleList()
         },
         handleList() {
-            if (this.checkedDate.length === 2) {
-                this.search.startTime = this.checkedDate[0]
-                this.search.endTime = this.checkedDate[1]
-            }
             getStockLists(this.search).then(res => {
-                console.log(res)
                 this.tableData = res.data.rows
                 this.total = res.data.total
             })
@@ -190,8 +207,32 @@ export default {
             updateStockInfo(this.formObj).then(res => {
                 this.$message.success('修改成功')
                 this.dialogVisible = false
+                // ;(this.search.rfid = ''),
+                //     (this.search.currentCode = ''),
+                //     (this.search.startTime = ''),
+                //     (this.search.endTime = ''),
+                //     (this.search.pageNum = 1),
+                //     (this.search.pageSize = 10)
                 this.handleList()
             })
+        },
+        validateEndTime(val) {
+            if (this.search.endTime) {
+                if (val > this.search.endTime) {
+                    this.$message.error('开始时间不能大于结束时间')
+                    this.search.startTime = ''
+                    return
+                }
+            }
+        },
+        validateStartTime(val) {
+            if (this.search.startTime) {
+                if (val < this.search.startTime) {
+                    this.$message.error('结束时间不能小于开始时间')
+                    this.search.endTime = ''
+                    return
+                }
+            }
         }
     }
 }

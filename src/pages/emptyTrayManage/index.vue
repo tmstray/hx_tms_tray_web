@@ -27,6 +27,23 @@
             </el-form-item>
             <el-form-item label="入库时间:">
                 <el-date-picker
+                    v-model="search.startTime"
+                    type="date"
+                    placeholder="选择开始日期"
+                    @change="validateEndTime"
+                    :picker-options="pickerOptions"
+                    value-format="yyyy-MM-dd"
+                ></el-date-picker>
+                至
+                <el-date-picker
+                    v-model="search.endTime"
+                    type="date"
+                    placeholder="选择结束日期"
+                    @change="validateStartTime"
+                    :picker-options="pickerOptions"
+                    value-format="yyyy-MM-dd"
+                ></el-date-picker>
+                <!-- <el-date-picker
                     v-model="checkedDate"
                     type="daterange"
                     value-format="yyyy-MM-dd"
@@ -34,7 +51,7 @@
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     :unlink-panels="false"
-                ></el-date-picker>
+                ></el-date-picker>-->
             </el-form-item>
             <el-form-item>
                 <el-button
@@ -54,7 +71,12 @@
                 <el-table-column label="托盘健康状态" prop="rfidHealthName" align="center" width="70" />
                 <el-table-column label="最后更新时间" prop="updateTime" align="center" width="160" />
                 <el-table-column label="修改人" prop="updateBy" align="center" />
-                <el-table-column label="描述信息" prop="remarks" align="center" />
+                <el-table-column label="报损/报废原因" align="center">
+                    <template slot-scope="scope">
+                        <p v-if="parseInt(scope.row.rfidHealth) ===1">{{ scope.row.damagedReason }}</p>
+                        <p v-if="parseInt(scope.row.rfidHealth) ===2">{{ scope.row.scrappedReason }}</p>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" fixed="right" align="center" width="262">
                     <template slot-scope="scope">
                         <el-button
@@ -81,8 +103,8 @@
         <!-- 报损 -->
         <el-dialog title="报损" :visible.sync="dialogVisible" width="50%" center>
             <el-form ref="form" :model="formObj">
-                <el-form-item label="报损原因" props="remarks" :rules="rules">
-                    <el-input v-model="formObj.remarks" maxlength="50"></el-input>
+                <el-form-item label="报损原因" props="damagedReason" :rules="rules">
+                    <el-input v-model="formObj.damagedReason" maxlength="50"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -93,8 +115,8 @@
         <!-- 报废 -->
         <el-dialog title="报废" :visible.sync="dialogVisible2" width="50%" center>
             <el-form ref="form" :model="formObj2">
-                <el-form-item label="报废原因" props="remarks" :rules="rules">
-                    <el-input v-model="formObj2.remarks" maxlength="50"></el-input>
+                <el-form-item label="报废原因" props="scrappedReason" :rules="rules">
+                    <el-input v-model="formObj2.scrappedReason" maxlength="50"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -158,11 +180,11 @@ export default {
             ],
             formObj: {
                 rfid: '',
-                remarks: ''
+                damagedReason: ''
             },
             formObj2: {
                 rfid: '',
-                remarks: ''
+                scrappedReason: ''
             },
             search: {
                 rfid: '',
@@ -172,7 +194,12 @@ export default {
                 pageNum: 1,
                 pageSize: 10
             },
-            dialogVisible3: false
+            dialogVisible3: false,
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now()
+                }
+            }
         }
     },
     components: {},
@@ -189,12 +216,8 @@ export default {
             this.handleList()
         },
         handleList() {
-            if (this.checkedDate.length === 2) {
-                this.search.startTime = this.checkedDate[0]
-                this.search.endTime = this.checkedDate[1]
-            }
             getStockLists(this.search).then(res => {
-                console.log(res)
+                // console.log(res)
                 this.tableData = res.data.rows
                 this.total = res.data.total
             })
@@ -235,7 +258,7 @@ export default {
                 this.dialogVisible = true
                 this.formObj = {
                     rfid: row.rfid,
-                    remarks: ''
+                    damagedReason: ''
                 }
             }
         },
@@ -243,13 +266,24 @@ export default {
             scrapOrLossTrayInfo({
                 rfid: this.formObj.rfid,
                 rfidHealth: 1,
-                remarks: this.formObj.remarks
+                damagedReason: this.formObj.damagedReason
             }).then(res => {
                 this.$message.success('报损操作成功！')
                 this.dialogVisible = false
-                this.handleList()
+
+                getStockLists({
+                    rfid: '',
+                    rfidHealth: '',
+                    startTime: '',
+                    endTime: '',
+                    pageNum: 1,
+                    pageSize: 10
+                }).then(res => {
+                    // console.log(res)
+                    this.tableData = res.data.rows
+                    this.total = res.data.total
+                })
             })
-            this.handleList()
         },
         openDialog2(row) {
             if (parseInt(row.rfidHealth) === 2) {
@@ -262,7 +296,7 @@ export default {
                 this.dialogVisible2 = true
                 this.formObj2 = {
                     rfid: row.rfid,
-                    remarks: ''
+                    scrappedReason: ''
                 }
             }
         },
@@ -270,13 +304,18 @@ export default {
             scrapOrLossTrayInfo({
                 rfid: this.formObj2.rfid,
                 rfidHealth: 2,
-                remarks: this.formObj2.remarks
+                scrappedReason: this.formObj2.scrappedReason
             }).then(res => {
                 this.$message.success('报废操作成功！')
                 this.dialogVisible2 = false
+                ;(this.search.rfid = ''),
+                    (this.search.rfidHealth = ''),
+                    (this.search.startTime = ''),
+                    (this.search.endTime = ''),
+                    (this.search.pageNum = 1),
+                    (this.search.pageSize = 10)
                 this.handleList()
             })
-            this.handleList()
         },
         forzenRowFun(row) {
             if (parseInt(row.rfidHealth) === 3) {
@@ -299,10 +338,9 @@ export default {
         },
         /** 下载模板操作 */
         downloadTemplate() {
-            exprotTemplate()
-                .then(response => {
-                    this.download(response.data.msg)
-                })
+            exprotTemplate().then(response => {
+                this.download(response.data.msg)
+            })
         },
         download(fileName) {
             /** 系统上线时需要改为服务器的路径：TODO */
@@ -312,6 +350,24 @@ export default {
                 encodeURI(fileName) +
                 '&delete=' +
                 true
+        },
+        validateEndTime(val) {
+            if (this.search.endTime) {
+                if (val > this.search.endTime) {
+                    this.$message.error('开始时间不能大于结束时间')
+                    this.search.startTime = ''
+                    return
+                }
+            }
+        },
+        validateStartTime(val) {
+            if (this.search.startTime) {
+                if (val < this.search.startTime) {
+                    this.$message.error('结束时间不能小于开始时间')
+                    this.search.endTime = ''
+                    return
+                }
+            }
         }
     }
 }

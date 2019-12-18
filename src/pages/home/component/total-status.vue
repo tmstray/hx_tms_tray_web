@@ -109,7 +109,7 @@
             </el-col>
         </el-row>
         <div>
-            <el-date-picker
+            <!-- <el-date-picker
                 v-model="time"
                 type="daterange"
                 range-separator="至"
@@ -117,7 +117,24 @@
                 end-placeholder="结束日期"
                 value-format="yyyy-MM-dd"
                 :unlink-panels="false"
-            ></el-date-picker>
+            ></el-date-picker> -->
+            <el-date-picker
+                    v-model="search.startTime"
+                    type="date"
+                    placeholder="选择开始日期"
+                    @change="validateEndTime"
+                    :picker-options="pickerOptions"
+                    value-format="yyyy-MM-dd"
+                ></el-date-picker>
+                至
+            <el-date-picker
+                    v-model="search.endTime"
+                    type="date"
+                    placeholder="选择结束日期"
+                    @change="validateStartTime"
+                    :picker-options="pickerOptions"
+                    value-format="yyyy-MM-dd"
+                ></el-date-picker>
             <el-button type="primary" @click="handleLists">查询</el-button>
         </div>
         <el-table :data="tableData" border style="width: 100%" height="550">
@@ -285,6 +302,11 @@ export default {
                     validator: validateRule
                 }
             ],
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now()
+                }
+            },
             formObj5: { rfid: '', currentCode: '' },
             formObj6: { rfid: '', remark: '' },
             rules2: [
@@ -374,9 +396,9 @@ export default {
             })
         },
         handleLists() {
-            this.search.startTime = this.time[0]
-            this.search.endTime = this.time[1]
-            console.log(this.search)
+            // this.search.startTime = this.time[0]
+            // this.search.endTime = this.time[1]
+            // console.log(this.search)
             getLogs(this.search).then(res => {
                 this.tableData = res.data.rows
                 this.total = res.data.total
@@ -479,6 +501,24 @@ export default {
         handleCurrentChange(val) {
             this.search.pageNum = val
             this.handleLists()
+        },
+        validateEndTime(val) {
+            if (this.search.endTime) {
+                if (val > this.search.endTime) {
+                    this.$message.error('开始时间不能大于结束时间')
+                    this.search.startTime = ''
+                    return
+                }
+            }
+        },
+        validateStartTime(val) {
+            if (this.search.startTime) {
+                if (val < this.search.startTime) {
+                    this.$message.error('结束时间不能小于开始时间')
+                    this.search.endTime = ''
+                    return
+                }
+            }
         }
     },
     created() {
@@ -491,9 +531,9 @@ export default {
         var day = now.getDate()
         month = month.toString().padStart(2, '0')
         day = day.toString().padStart(2, '0')
-        this.time = [`${year}-${month}-${day}`, `${year}-${month}-${day}`]
+        this.search.startTime=`${year}-${month}-${day}`
+        this.search.endTime=`${year}-${month}-${day}`
         this.handleLists()
-
         this.getInkjetPrinterInfo()
         this.getBindInfo()
     },
