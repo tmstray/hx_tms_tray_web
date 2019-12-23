@@ -1,15 +1,15 @@
 <template>
     <aside class="aside__top">
-        <span
+        <!-- <span
             class="iconfont icon-nav toggleNavCollapse"
             :class="{active:isSidebarNavCollapse}"
             @click="toggleNavCollapse"
         >
-        </span>
-        <el-breadcrumb separator="/">
-            <transition-group name="breadcrumb">
+        </span> -->
+        <!-- <el-breadcrumb separator="/">
+            <transition-group name="breadcrumb"> -->
                 <!-- 防止面包屑导航出现 首页/首页， v-if="route.name!='home'" -->
-                <template v-for="(route,i) in crumbList">
+                <!-- <template v-for="(route,i) in crumbList">
                     <el-breadcrumb-item
                         :key="route"
                         :class="{'is-last-link':i==crumbList.length-1}"
@@ -18,11 +18,13 @@
                     </el-breadcrumb-item>
                 </template>
             </transition-group>
-        </el-breadcrumb>
-        <!-- <div class="aside__top--right">
+        </el-breadcrumb> -->
+        <div class="aside__top--right">
             <div class="user-msg">
                 <img class="user-img" :src="avatar" alt="">
-                <span class="user-name">{{account}}</span>
+                欢迎
+                <span class="user-name" v-if="account">{{account}}</span>
+                <span class="user-name" v-else>admin</span>
                 <el-dropdown trigger="click" placement="top">
                     <span class="el-dropdown-link">
                         <i class="el-icon-arrow-down el-icon--right"></i>
@@ -34,9 +36,9 @@
                 </el-dropdown>
             </div>
             <div class="quit-system" @click="loginOut">
-                <span class="iconfont icon-quit"></span>
+                <el-button  class="logout-button" size='mini'>登出</el-button>
             </div>
-        </div> -->
+        </div>
     </aside>
 </template>
 
@@ -54,6 +56,13 @@ export default {
     methods: {
         toggleNavCollapse() {
             this.$store.commit('toggleNavCollapse')
+        },
+        loginOut() {
+            console.log('this', this)
+            this.$store.commit('LOGIN_OUT')
+            this.$router.push({ path: '/login' })
+            /* 防止切换角色时addRoutes重复添加路由导致出现警告 */
+            // window.location.reload()
         }
     }
 }

@@ -20,9 +20,9 @@
                 :name="item.name"
             ></el-tab-pane>
         </el-tabs>
-
+        <div class="line2"></div>
         <!-- 退出按钮 -->
-        <div class="aside__top--right">
+        <!-- <div class="aside__top--right">
             <div class="user-msg">
                 <img class="user-img" :src="avatar" alt />
                 <span class="user-name">{{account}}</span>
@@ -39,7 +39,7 @@
             <div class="quit-system">
                 <el-button @click="loginOut" class="logout-button" size='mini'>登出</el-button>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -110,7 +110,7 @@ export default {
 </script>
 
 <style scoped lang = "scss">
-.aside__top--right {
+/* .aside__top--right {
     position: absolute;
     right: 10px;
     top: 20px;
@@ -181,7 +181,6 @@ export default {
             color: #758eb5;
         }
     }
-}
+} */
 
-.logout-button {}
 </style>

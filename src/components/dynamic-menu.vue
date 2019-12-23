@@ -11,10 +11,10 @@
             class='iconfont'
             :class='v.meta.icon'
           ></i>
-          <svg-icon
+          <!-- <svg-icon
             v-if="v.meta&&v.meta.icon"
             :icon-class="v.meta.icon"
-          ></svg-icon>
+          ></svg-icon> -->
           <span>{{v.meta.name}}</span>
         </template>
         <el-menu-item-group>
@@ -31,10 +31,10 @@
           class='iconfont'
           :class='v.meta.icon'
         ></i>
-        <svg-icon
+        <!-- <svg-icon
           v-if="v.meta&&v.meta.icon"
           :icon-class="v.meta.icon"
-        ></svg-icon>
+        ></svg-icon> -->
         <span slot="title">{{v.meta.name}}</span>
       </el-menu-item>
     </template>

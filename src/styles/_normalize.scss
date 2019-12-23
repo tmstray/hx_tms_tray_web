@@ -1,7 +1,8 @@
 @charset "utf-8";
-
+*{
+  font-size: 18px;
+}
 html {
-
   color: #000;
   background: #fff;
   overflow-y: scroll;
@@ -22,6 +23,7 @@ body {
   height: 100%;
   width: 100%; 
   overflow: auto;
+  font-size: 18px;
 }
 
 body,

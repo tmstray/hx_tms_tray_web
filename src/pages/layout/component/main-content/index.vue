@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
-        <TopTabs/>
         <TopAside/>
+        <TopTabs/>
         <Content/>
     </div>
 </template>

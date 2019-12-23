@@ -2,7 +2,7 @@
     <div class="trayManage">
         <div class="search">
             <div></div>
-            <el-form :inline="true" class="demo-form-inline">
+            <el-form :inline="true" class="searchBar">
                 <el-form-item label="托盘流转状态:">
                     <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
                         <el-option
@@ -44,13 +44,13 @@
             <!-- @current-change ="rowCheckedChange" -->
             <el-table-column type="index" label="序号" width="50"></el-table-column>
             <el-table-column prop="factoryCode" label="工厂编码" width="90"></el-table-column>
-            <el-table-column prop="factoryName" label="工厂名称" width="90"></el-table-column>
-            <el-table-column prop="rfid" label="托盘ID" width="150"></el-table-column>
+            <el-table-column prop="factoryName" label="工厂名称" width="100"></el-table-column>
+            <el-table-column prop="rfid" label="托盘ID" width="220"></el-table-column>
             <el-table-column prop="rfidStatusName" label="托盘状态" width="90"></el-table-column>
             <el-table-column prop="rfidTypeName" label="托盘类型" width="90"></el-table-column>
-            <el-table-column prop="currentCode" label="一次绑定(包装喷码)" width="180"></el-table-column>
-            <el-table-column prop="orderNo" label="二次绑定(交货单号)"></el-table-column>
-            <el-table-column prop="initTime" label="托盘进场时间"></el-table-column>
+            <el-table-column prop="currentCode" label="一次绑定(包装喷码)"></el-table-column>
+            <el-table-column prop="orderNo" label="二次绑定(交货单号)" ></el-table-column>
+            <el-table-column prop="initTime" label="托盘进场时间" width="200"></el-table-column>
         </el-table>
         <!-- <div style="width:90%;"> -->
             <el-pagination
@@ -135,17 +135,6 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        .el-select {
-            margin-right: 20px;
-        }
-    }
-    form {
-        .el-select {
-            width: 100%;
-        }
-    }
-    .paginationStyle {
-        text-align: right;
     }
 }
 </style>

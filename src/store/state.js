@@ -15,7 +15,7 @@ export default {
             path: '/product',
             name: 'product',
             meta: {
-                icon: 'three',
+                icon: 'el-icon-thumb',
                 name: '生产界面'
             },
             children: [
@@ -46,7 +46,7 @@ export default {
             path: '/productReport',
             name: 'productReport',
             meta: {
-                icon: 'one',
+                icon: 'el-icon-thumb',
                 name: '生产报表'
             },
             children: [

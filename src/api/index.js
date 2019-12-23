@@ -18,13 +18,13 @@ export const getProductLineLists = (params) => {
     return http.get(urlLists.getProductLineLists, params)
 }
 export const getInkjetPrinterInfo = (params) => {
-    return http.get(urlLists.getInkjetPrinterInfo, params,{isShowLoading:false})
+    return http.get(urlLists.getInkjetPrinterInfo, params, { isShowLoading: false })
 }
 export const getRules = (params) => {
     return http.get(urlLists.getRules, params)
 }
 export const getBindInfo = (params) => {
-    return http.get(urlLists.getBindInfo, params,{isShowLoading:false})
+    return http.get(urlLists.getBindInfo, params, { isShowLoading: false })
 }
 export const getLogs = (params) => {
     return http.post(urlLists.getLog, params)

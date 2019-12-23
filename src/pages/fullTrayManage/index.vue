@@ -1,10 +1,9 @@
 <template>
     <div class="fullTrayManage">
-        <el-form :inline="true" :model="search" class="demo-form-inline">
+        <el-form class="searchBar" :inline="true" :model="search">
             <el-form-item label="托盘ID:">
                 <el-input v-model="search.rfid"></el-input>
             </el-form-item>
-
             <el-form-item label="包装喷码:">
                 <el-input v-model="search.currentCode"></el-input>
             </el-form-item>
@@ -12,15 +11,6 @@
                 <el-input v-model="search.orderNo"></el-input>
             </el-form-item>
             <el-form-item label="入库时间:">
-                <!-- <el-date-picker
-                    v-model="checkedDate"
-                    type="daterange"
-                    value-format="yyyy-MM-dd"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    :unlink-panels="false"
-                ></el-date-picker>-->
                 <el-date-picker
                     v-model="search.startTime"
                     type="date"
@@ -28,8 +18,7 @@
                     @change="validateEndTime"
                     :picker-options="pickerOptions"
                     value-format="yyyy-MM-dd"
-                ></el-date-picker>
-                至
+                ></el-date-picker> 至
                 <el-date-picker
                     v-model="search.endTime"
                     type="date"
@@ -50,21 +39,21 @@
         </el-form>
         <el-table :data="tableData" style="width: 100%" border>
             <el-table-column type="index" label="满托库存清单" align="center">
-                <el-table-column type="index" label="序号" />
-                <el-table-column fixed="left" label="入库时间" prop="initTime" width="160" center />
+                <el-table-column type="index" label="序号" width="50"/>
+                <el-table-column fixed="left" label="入库时间" prop="initTime" width="200" center />
                 <el-table-column label="托盘ID" prop="rfid" width="160" center />
-                <el-table-column label="绑定包装喷码" prop="currentCode" width="170" center />
+                <el-table-column label="绑定包装喷码" prop="currentCode" width="250" center />
                 <el-table-column label="绑定DL交货单" prop="orderNo" width="130" center />
                 <el-table-column label="托盘流转状态" prop="rfidStatusName" center />
                 <el-table-column label="托盘健康状态" prop="rfidHealthName" center />
-                <el-table-column label="最后更新时间" prop="updateTime" width="160" center />
+                <el-table-column label="最后更新时间" prop="updateTime" width="200" center />
                 <el-table-column label="修改人" prop="updateBy" />
                 <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
                         <el-button
                             type="primary"
                             @click="handleUpdate(scope.row)"
-                            :disabled="((parseInt(scope.row.rfidStatus))===3 
+                            :disabled="((parseInt(scope.row.rfidStatus))===3
                                     || (parseInt(scope.row.rfidStatus)===4))"
                         >修改</el-button>
                     </template>
@@ -83,7 +72,7 @@
         ></el-pagination>
         <!-- 修改包装喷码和交货单 -->
         <el-dialog title="修改" :visible.sync="dialogVisible" width="30%" center>
-            <el-form :model="formObj" ref="formObj">
+            <el-form :model="formObj" ref="formObj" label-width="130px">
                 <el-input v-model="formObj.oldCode" style="display:none;"></el-input>
                 <el-form-item label="绑定包装喷码:" prop="currentCode" :rules="rules">
                     <el-input v-model="formObj.currentCode"></el-input>
@@ -221,7 +210,6 @@ export default {
                 if (val > this.search.endTime) {
                     this.$message.error('开始时间不能大于结束时间')
                     this.search.startTime = ''
-                    return
                 }
             }
         },
@@ -230,7 +218,6 @@ export default {
                 if (val < this.search.startTime) {
                     this.$message.error('结束时间不能小于开始时间')
                     this.search.endTime = ''
-                    return
                 }
             }
         }

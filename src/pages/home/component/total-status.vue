@@ -1,6 +1,6 @@
 <template>
     <div class>
-        <el-form :inline="true" :model="formObj">
+        <el-form class="searchBar" :inline="true" :model="formObj">
             <el-form-item label="生产线:">
                 <el-select v-model="formObj.lineId" placeholder="请选择" @change="getPrinterRules">
                     <el-option
@@ -18,8 +18,13 @@
                 <el-input v-model="formObj.packageType" readonly></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button v-if="!isStart" @click="startCreateCode">开始生成喷码</el-button>
-                <el-button v-else @click="endCreateCode">结束生成喷码</el-button>
+                <el-button
+                    v-if="!isStart"
+                    @click="startCreateCode"
+                    type="danger"
+                    icon="el-icon-video-play"
+                >开始生成喷码</el-button>
+                <el-button v-else @click="endCreateCode" icon="el-icon-video-pause">结束生成喷码</el-button>
             </el-form-item>
         </el-form>
 
@@ -31,21 +36,21 @@
                         <p>当前喷码</p>
                         <p>{{inkjetPrinter.currentCode}}</p>
                         <p>
-                            <el-button type="primary" @click="openDialog">修改</el-button>
+                            <el-button type="danger" @click="openDialog">修改</el-button>
                         </p>
                     </div>
                     <div>
                         <p>已喷袋数</p>
                         <p>{{inkjetPrinter.currentNumber}}</p>
                         <p>
-                            <el-button type="primary" @click="openDialog2">修改</el-button>
+                            <el-button type="danger" @click="openDialog2">修改</el-button>
                         </p>
                     </div>
                     <div>
                         <p>喷码规则</p>
                         <p>{{rule|validateRule}}</p>
                         <p>
-                            <el-button type="primary" @click="openDialog3">更新</el-button>
+                            <el-button type="danger" @click="openDialog3">更新</el-button>
                         </p>
                     </div>
                     <div>
@@ -62,7 +67,7 @@
                         <p>当前码垛</p>
                         <p></p>
                         <p>
-                            <el-button type="primary" disabled>修改</el-button>
+                            <el-button type="danger" disabled>修改</el-button>
                         </p>
                     </div>
                     <div>
@@ -74,14 +79,14 @@
                         <p>计划生产</p>
                         <p></p>
                         <p>
-                            <el-button type="primary" disabled>停机</el-button>
+                            <el-button type="danger" disabled>停机</el-button>
                         </p>
                     </div>
                     <div>
                         <p>码垛规格</p>
                         <p></p>
                         <p>
-                            <el-button type="primary" disabled>启动</el-button>
+                            <el-button type="danger" disabled>启动</el-button>
                         </p>
                     </div>
                 </div>
@@ -108,26 +113,18 @@
                 </div>
             </el-col>
         </el-row>
-        <div>
-            <!-- <el-date-picker
-                v-model="time"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                value-format="yyyy-MM-dd"
-                :unlink-panels="false"
-            ></el-date-picker> -->
-            <el-date-picker
+        <div class="searchTip">
+            <p class="tip">今日托盘生产日志</p>
+            <div>
+                <el-date-picker
                     v-model="search.startTime"
                     type="date"
                     placeholder="选择开始日期"
                     @change="validateEndTime"
                     :picker-options="pickerOptions"
                     value-format="yyyy-MM-dd"
-                ></el-date-picker>
-                至
-            <el-date-picker
+                ></el-date-picker>至
+                <el-date-picker
                     v-model="search.endTime"
                     type="date"
                     placeholder="选择结束日期"
@@ -135,18 +132,19 @@
                     :picker-options="pickerOptions"
                     value-format="yyyy-MM-dd"
                 ></el-date-picker>
-            <el-button type="primary" @click="handleLists">查询</el-button>
+                <el-button type="danger" @click="handleLists">查询</el-button>
+            </div>
         </div>
         <el-table :data="tableData" border style="width: 100%" height="550">
-            <el-table-column type="index" label="序号" width="50"></el-table-column>
+            <el-table-column type="index" label="序号" width="80"></el-table-column>
             <el-table-column prop="create_time" label="生产日期"></el-table-column>
             <el-table-column prop="rfid" label="托盘ID"></el-table-column>
             <el-table-column prop="current_code" label="包装喷码"></el-table-column>
             <el-table-column prop="rfid_status" label="状态" :formatter="formatter"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="openDialog4(scope.row)">修改</el-button>
-                    <el-button @click="openDialog5(scope.row)">报废</el-button>
+                    <el-button type="danger" @click="openDialog4(scope.row)">修改</el-button>
+                    <el-button type="danger" @click="openDialog5(scope.row)">报废</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -161,7 +159,7 @@
         ></el-pagination>
         <!-- 喷码修改 -->
         <el-dialog title="当前喷码修改" :visible.sync="dialogVisible" width="30%" center>
-            <el-form :model="formObj2">
+            <el-form :model="formObj2" label-width="80px">
                 <el-form-item label="当前喷码:">
                     <el-input v-model="formObj2.currentCode" maxlength="18"></el-input>
                 </el-form-item>
@@ -173,7 +171,7 @@
         </el-dialog>
         <!-- 已喷袋数 -->
         <el-dialog title="当前已喷袋数" :visible.sync="dialogVisible2" width="30%" center>
-            <el-form :model="formObj3">
+            <el-form :model="formObj3" label-width="80px">
                 <el-form-item label="已喷袋数:">
                     <el-input v-model="formObj3.currentNumber"></el-input>
                 </el-form-item>
@@ -185,11 +183,15 @@
         </el-dialog>
         <!-- 喷码规则 -->
         <el-dialog title="更新喷码规则" :visible.sync="dialogVisible3" width="30%" center>
-            <el-form :model="formObj4">
+            <el-form :model="formObj4" label-width="100px">
                 <el-form-item label="喷码规则:" prop="customRule" :rules="rules">
-                    <el-tag type="info">{{formObj4.rule.substring(0,6)}}</el-tag>+
-                    <el-tag type="info">{{formObj4.rule.substring(6,10)}}</el-tag>+
-                    <el-input v-model="formObj4.customRule"></el-input>
+                    <el-row>
+                        <el-col :span="5"><el-tag type="info">{{formObj4.rule.substring(0,6)}}</el-tag> +</el-col>
+                        <el-col :span="4"><el-tag type="info">{{formObj4.rule.substring(6,10)}}</el-tag> +</el-col>
+                        <el-col :span="12">
+                            <el-input  v-model="formObj4.customRule"></el-input>
+                        </el-col>
+                    </el-row>
                 </el-form-item>
             </el-form>
 
@@ -201,7 +203,7 @@
         <!-- 修改包装喷码 -->
         <el-dialog title="更新包装喷码" :visible.sync="dialogVisible4" width="30%" center>
             <el-form :model="formObj5">
-                <el-form-item label="包装喷码:">
+                <el-form-item label="包装喷码:" label-width="80px">
                     <el-input v-model="formObj5.currentCode" maxlength="18"></el-input>
                 </el-form-item>
             </el-form>
@@ -212,7 +214,7 @@
         </el-dialog>
         <!-- 报废理由 -->
         <el-dialog title="托盘报废" :visible.sync="dialogVisible5" width="30%" center>
-            <el-form :model="formObj6" ref="formObj6">
+            <el-form :model="formObj6" ref="formObj6" label-width="140px">
                 <el-form-item label="托盘报废理由:" prop="remark" :rules="rules2">
                     <el-input type="textarea" :rows="3" v-model="formObj6.remark"></el-input>
                 </el-form-item>
@@ -507,7 +509,6 @@ export default {
                 if (val > this.search.endTime) {
                     this.$message.error('开始时间不能大于结束时间')
                     this.search.startTime = ''
-                    return
                 }
             }
         },
@@ -516,7 +517,6 @@ export default {
                 if (val < this.search.startTime) {
                     this.$message.error('结束时间不能小于开始时间')
                     this.search.endTime = ''
-                    return
                 }
             }
         }
@@ -531,8 +531,8 @@ export default {
         var day = now.getDate()
         month = month.toString().padStart(2, '0')
         day = day.toString().padStart(2, '0')
-        this.search.startTime =`${year}-${month}-${day}`
-        this.search.endTime =`${year}-${month}-${day}`
+        this.search.startTime = `${year}-${month}-${day}`
+        this.search.endTime = `${year}-${month}-${day}`
         this.handleLists()
         this.getInkjetPrinterInfo()
         this.getBindInfo()
