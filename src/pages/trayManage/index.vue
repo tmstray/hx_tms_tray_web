@@ -52,7 +52,7 @@
             <el-table-column prop="orderNo" label="二次绑定(交货单号)"></el-table-column>
             <el-table-column prop="initTime" label="托盘进场时间"></el-table-column>
         </el-table>
-        <div style="width:90%;">
+        <!-- <div style="width:90%;"> -->
             <el-pagination
                 class="paginationStyle"
                 background
@@ -64,7 +64,7 @@
                 :page-sizes="[10, 20, 30, 40]"
                 layout="total, sizes, prev, pager, next, jumper"
             ></el-pagination>
-        </div>
+        <!-- </div> -->
     </div>
 </template>
 

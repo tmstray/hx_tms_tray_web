@@ -65,8 +65,8 @@
         <el-table :data="tableData" style="width: 100%" border>
             <el-table-column type="index" label="空托库存清单" align="center">
                 <el-table-column type="index" label="序号" width="50" align="center" />
-                <el-table-column label="入库时间" prop="initTime" align="center" width="170" />
-                <el-table-column label="托盘ID" prop="rfid" align="center" width="130" />
+                <el-table-column label="入库时间" prop="initTime" align="center" width="170" fixed/>
+                <el-table-column label="托盘ID" prop="rfid" align="center" width="160" />
                 <el-table-column label="托盘流转状态" prop="rfidStatusName" align="center" width="70" />
                 <el-table-column label="托盘健康状态" prop="rfidHealthName" align="center" width="70" />
                 <el-table-column label="最后更新时间" prop="updateTime" align="center" width="160" />

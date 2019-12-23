@@ -51,21 +51,21 @@
         <el-table :data="tableData" style="width: 100%" border>
             <el-table-column type="index" label="满托库存清单" align="center">
                 <el-table-column type="index" label="序号" />
-                <el-table-column label="入库时间" prop="initTime" width="160" center />
-                <el-table-column label="托盘ID" prop="rfid" width="130" center />
+                <el-table-column fixed="left" label="入库时间" prop="initTime" width="160" center />
+                <el-table-column label="托盘ID" prop="rfid" width="160" center />
                 <el-table-column label="绑定包装喷码" prop="currentCode" width="170" center />
                 <el-table-column label="绑定DL交货单" prop="orderNo" width="130" center />
                 <el-table-column label="托盘流转状态" prop="rfidStatusName" center />
                 <el-table-column label="托盘健康状态" prop="rfidHealthName" center />
                 <el-table-column label="最后更新时间" prop="updateTime" width="160" center />
                 <el-table-column label="修改人" prop="updateBy" />
-                <el-table-column label="操作">
+                <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
                         <el-button
                             type="primary"
                             @click="handleUpdate(scope.row)"
-                            :disabled="((parseInt(scope.row.rfidStatus)===3 
-                                    ||parseInt(scope.row.rfidStatus)===4))"
+                            :disabled="((parseInt(scope.row.rfidStatus))===3 
+                                    || (parseInt(scope.row.rfidStatus)===4))"
                         >修改</el-button>
                     </template>
                 </el-table-column>
