@@ -62,6 +62,7 @@
                     class="searchBtn"
                     @click="handleList"
                 >搜索</el-button>
+                <el-button @click="resetForm('search')">重置</el-button>
             </el-form-item>
         </el-form>
         <el-table :data="tableData" style="width: 100%" border>
@@ -106,7 +107,12 @@
         <el-dialog title="报损" :visible.sync="dialogVisible" width="30%" center>
             <el-form ref="form" :model="formObj" label-width="80px">
                 <el-form-item label="报损原因" props="damagedReason" :rules="rules">
-                    <el-input type="textarea" :rows="3" v-model="formObj.damagedReason" maxlength="50"></el-input>
+                    <el-input
+                        type="textarea"
+                        :rows="3"
+                        v-model="formObj.damagedReason"
+                        maxlength="50"
+                    ></el-input>
                 </el-form-item>
             </el-form>
 
@@ -118,7 +124,12 @@
         <el-dialog title="报废" :visible.sync="dialogVisible2" width="30%" center>
             <el-form ref="form" :model="formObj2" label-width="80px">
                 <el-form-item label="报废原因" props="scrappedReason" :rules="rules">
-                    <el-input type="textarea" :rows="3" v-model="formObj2.scrappedReason" maxlength="50"></el-input>
+                    <el-input
+                        type="textarea"
+                        :rows="3"
+                        v-model="formObj2.scrappedReason"
+                        maxlength="50"
+                    ></el-input>
                 </el-form-item>
             </el-form>
 
@@ -365,6 +376,14 @@ export default {
                     this.$message.error('结束时间不能小于开始时间')
                     this.search.endTime = ''
                 }
+            }
+        },
+        resetForm(formName) {
+            // this.$nextTick(() => {
+            //     this.$refs['formName'].resetFields()
+            // })
+            if (this.$refs[formName]) {
+                this.$refs[formName].resetFields()
             }
         }
     }
