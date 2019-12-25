@@ -1,5 +1,5 @@
 <template>
-    <div class="stockView">
+    <div class="user">
         <div class="search" align="right">
             <div></div>
             <el-form :inline="true" class="searchBar">
@@ -34,12 +34,11 @@
             </el-form>
         </div>
         <el-table :data="tableData" style="width: 100%" border>
-            <el-table-column type="index" label="序号" width="50"></el-table-column>
-            <el-table-column label="工厂代码" prop="factoryCode"></el-table-column>
-            <el-table-column label="工厂描述" prop="factoryName"></el-table-column>
-            <el-table-column label="托盘状态" prop="rfidStatusName"></el-table-column>
-            <el-table-column label="托盘类型" prop="rfidTypeName"></el-table-column>
-            <el-table-column label="托盘数量" prop="rfidCount"></el-table-column>
+            <el-table-column type="index" label="序号" width="70"></el-table-column>
+            <el-table-column label="菜单名称" prop="menuName"></el-table-column>
+            <el-table-column label="图标" prop="icon"></el-table-column>
+            <el-table-column label="排序" prop="orderNum"></el-table-column>
+            <el-table-column label="可见" prop="visible"></el-table-column>
         </el-table>
         <el-pagination
             background
@@ -55,7 +54,7 @@
 </template>
 
 <script>
-import { getStockLists } from '@/api/stockView.js'
+import { getMenuList } from '@/api/menu.js'
 import DIC from '@/api/dic.js'
 export default {
     data() {
@@ -84,12 +83,7 @@ export default {
             this.handleList()
         },
         handleList() {
-            getStockLists({
-                rfidStatus: this.rfidStatusVal,
-                rfidType: this.rfidTypeVal,
-                pageNum: this.pageNum,
-                pageSize: this.pageSize
-            }).then(res => {
+            getMenuList({}).then(res => {
                 console.log(res)
                 this.tableData = res.data.rows
                 this.total = res.data.total
@@ -103,7 +97,7 @@ export default {
 </script>
 
 <style  lang="scss">
-.stockView {
+.user {
     .search {
         display: flex;
         flex-direction: row;

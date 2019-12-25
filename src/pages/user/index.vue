@@ -39,6 +39,8 @@
             <el-table-column label="昵称" prop="nickName"></el-table-column>
             <el-table-column label="用户邮箱" prop="email"></el-table-column>
             <el-table-column label="手机号码" prop="phonenumber"></el-table-column>
+            <el-table-column label="状态" prop="status"></el-table-column>
+            
         </el-table>
         <el-pagination
             background
