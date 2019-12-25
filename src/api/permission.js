@@ -25,5 +25,5 @@ export function getNextLevel(id) {
     return axios.get(`/permission/level?id=${id}`)
 }
 export function login(data) {
-    return axios.post('/user/login', data)
+    return axios.post('/login', data)
 }

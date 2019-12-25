@@ -85,42 +85,39 @@ instance.interceptors.request.use(
 )
 
 // 响应拦截器即异常处理
-instance.interceptors.response.use(
-    response => {
-        const httpStatus = Number(response.status)
-        const resCode = Number(response.data.code)
-        const msg = response.data.msg
-        if (httpStatus !== 200) {
-            let loading
-            loading = document.getElementById('ajaxLoading')
-            loading.style.display = 'none'
-            if (httpStatus >= 400 && httpStatus < 500) {
-                Message.warning({
-                    message: '网络错误'
-                })
-            } else {
-                Message.warning({
-                    message: '服务器错误'
-                })
-            }
-            return Promise.reject(response)
-        }
-        if (resCode !== 200) {
+instance.interceptors.response.use(response => {
+    const httpStatus = Number(response.status)
+    const resCode = Number(response.data.code)
+    const msg = response.data.msg
+    if (httpStatus !== 200) {
+        let loading
+        loading = document.getElementById('ajaxLoading')
+        loading.style.display = 'none'
+        if (httpStatus >= 400 && httpStatus < 500) {
             Message.warning({
-                message: msg
+                message: '网络错误'
             })
-            return Promise.reject(response)
-        }
-        return response
-    },
-    err => {
-        if (err && err.response) {
         } else {
-            err.response.data.msg = '连接服务器失败'
+            Message.warning({
+                message: '服务器错误'
+            })
         }
-        return Promise.reject(err)
+        return Promise.reject(response)
     }
-)
+    if (resCode !== 200) {
+        Message.warning({
+            message: msg
+        })
+        return Promise.reject(response)
+    }
+    return response
+}, err => {
+    if (err && err.response) {
+    } else {
+        err.response.data.msg = '连接服务器失败'
+    }
+    return Promise.reject(err)
+})
 
 http.get = function (url, params, options) {
     let loading

@@ -2,7 +2,7 @@
     <div class="stockView">
         <div class="search" align="right">
             <div></div>
-            <el-form :inline="true" class="demo-form-inline">
+            <el-form :inline="true" class="searchBar">
                 <el-form-item label="托盘流转状态:">
                     <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
                         <el-option
@@ -108,9 +108,6 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        .el-select {
-            margin-right: 20px;
-        }
     }
 }
 </style>

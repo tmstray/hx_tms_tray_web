@@ -1,25 +1,41 @@
 <template>
     <div class="login-container">
-        <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+        <el-form
+            class="login-form"
+            autocomplete="on"
+            :model="loginForm"
+            :rules="loginRules"
+            ref="loginForm"
+            label-position="left"
+        >
             <h3 class="title">后台管理系统</h3>
-            <el-form-item prop="username">
+            <el-form-item prop="userName">
                 <span class="svg-container svg-container_login">
                     <svg-icon icon-class="user" />
                 </span>
-                <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+                <el-input type="text" v-model="loginForm.userName" autocomplete="on" />
             </el-form-item>
             <el-form-item prop="password">
                 <span class="svg-container">
                     <svg-icon icon-class="password"></svg-icon>
                 </span>
-                <el-input name="password" :type="pwdType" @keyup.enter.native="login" v-model="loginForm.password" autoComplete="on"
-                placeholder="password"></el-input>
-                <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
+                <el-input
+                    :type="pwdType"
+                    @keyup.enter.native="login"
+                    v-model="loginForm.password"
+                    autocomplete="on"
+                ></el-input>
+                <span class="show-pwd" @click="showPwd">
+                    <svg-icon icon-class="eye" />
+                </span>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="login">
-                Sign in
-                </el-button>
+                <el-button
+                    type="primary"
+                    style="width:100%;"
+                    :loading="loading"
+                    @click.native.prevent="login"
+                >Sign in</el-button>
             </el-form-item>
             <div class="tips">用户为admin的时候，能够看到所有的权限列表，其余账号只能看到部分</div>
         </el-form>
@@ -47,11 +63,11 @@ export default {
         }
         return {
             loginForm: {
-                username: 'admin',
-                password: '123456'
+                userName: 'admin',
+                password: 'admin123'
             },
             loginRules: {
-                username: [
+                userName: [
                     {
                         required: true,
                         trigger: 'blur',
@@ -83,144 +99,148 @@ export default {
                 this.$router.replace('/')
                 // 获取权限
 
-                let labelPermission = [{
-                    path: '',
-                    name: 'container',
-                    redirect: 'home',
-                    meta: {
-                        requiresAuth: true,
-                        name: '首页',
-                        icon: 'tree'
-                    },
-                    children: [{
-                        id: 1,
-                        path: 'home',
-                        name: 'home',
+                let labelPermission = [
+                    {
+                        path: '',
+                        name: 'container',
+                        redirect: 'home',
                         meta: {
+                            requiresAuth: true,
                             name: '首页',
                             icon: 'tree'
-                        }
-                    }]
-                }, {
-                    path: 'order',
-                    name: 'order-manage',
-                    meta: {
-                        name: '订单管理',
-                        icon: 'example'
-                    },
-                    children: [
-                        {
-                            path: 'list',
-                            name: 'order-list',
-                            meta: {
-                                name: '订单列表',
-                                icon: 'table'
-                            },
-                            id: 3123
                         },
-                        {
-                            path: 'product',
-                            name: 'product-manage',
-                            meta: {
-                                name: '生产管理',
-                                icon: 'user'
-                            },
-                            children: [
-                                {
-                                    path: 'list',
-                                    name: 'product-list',
-                                    meta: {
-                                        name: '生产列表',
-                                        icon: 'table'
-                                    },
-                                    id: 2345
-                                },
-                                {
-                                    path: 'review',
-                                    name: 'review-manage',
-                                    meta: {
-                                        name: '审核管理',
-                                        icon: 'eye'
-                                    },
-                                    id: 5345
+                        children: [
+                            {
+                                id: 1,
+                                path: 'home',
+                                name: 'home',
+                                meta: {
+                                    name: '首页',
+                                    icon: 'tree'
                                 }
-                            ]
-                        },
-                        {
-                            path: 'returnGoods',
-                            name: 'return-goods',
-                            meta: {
-                                name: '退货管理',
-                                icon: 'nested'
                             }
-                        }
-                    ]
-                },
-                {
-                    path: '/goods',
-                    name: 'goods',
-                    meta: {
-                        name: '产品管理',
-                        icon: 'user'
+                        ]
                     },
-                    children: [
-                        {
-                            path: 'list',
-                            name: 'goods-list',
-                            meta: {
-                                name: '产品列表',
-                                icon: 'table'
-                            },
-                            id: 4234
-
+                    {
+                        path: 'order',
+                        name: 'order-manage',
+                        meta: {
+                            name: '订单管理',
+                            icon: 'example'
                         },
-                        {
-                            path: 'classify',
-                            name: 'goods-classify',
-                            meta: {
-                                name: '产品分类',
-                                icon: 'tree'
+                        children: [
+                            {
+                                path: 'list',
+                                name: 'order-list',
+                                meta: {
+                                    name: '订单列表',
+                                    icon: 'table'
+                                },
+                                id: 3123
                             },
-                            id: 4254
-                        }
-                    ]
-                },
-                {
-                    path: '/permission',
-                    name: 'permission',
-                    meta: {
-                        name: '权限管理',
-                        icon: 'table'
-                    },
-                    children: [
-                        {
-                            path: 'user',
-                            name: 'user-manage',
-                            meta: {
-                                name: '用户管理',
-                                icon: 'table'
+                            {
+                                path: 'product',
+                                name: 'product-manage',
+                                meta: {
+                                    name: '生产管理',
+                                    icon: 'user'
+                                },
+                                children: [
+                                    {
+                                        path: 'list',
+                                        name: 'product-list',
+                                        meta: {
+                                            name: '生产列表',
+                                            icon: 'table'
+                                        },
+                                        id: 2345
+                                    },
+                                    {
+                                        path: 'review',
+                                        name: 'review-manage',
+                                        meta: {
+                                            name: '审核管理',
+                                            icon: 'eye'
+                                        },
+                                        id: 5345
+                                    }
+                                ]
                             },
-                            id: 234
-                        },
-                        {
-                            path: 'role',
-                            name: 'role-manage',
-                            meta: {
-                                name: '角色管理',
-                                icon: 'eye'
-                            },
-                            id: 465
-                        },
-                        {
-                            path: 'menu',
-                            name: 'menu-manage',
-                            meta: {
-                                name: '菜单管理',
-                                icon: 'tree'
+                            {
+                                path: 'returnGoods',
+                                name: 'return-goods',
+                                meta: {
+                                    name: '退货管理',
+                                    icon: 'nested'
+                                }
                             }
-                        }
-                    ]
-                }]
+                        ]
+                    },
+                    {
+                        path: '/goods',
+                        name: 'goods',
+                        meta: {
+                            name: '产品管理',
+                            icon: 'user'
+                        },
+                        children: [
+                            {
+                                path: 'list',
+                                name: 'goods-list',
+                                meta: {
+                                    name: '产品列表',
+                                    icon: 'table'
+                                },
+                                id: 4234
+                            },
+                            {
+                                path: 'classify',
+                                name: 'goods-classify',
+                                meta: {
+                                    name: '产品分类',
+                                    icon: 'tree'
+                                },
+                                id: 4254
+                            }
+                        ]
+                    },
+                    {
+                        path: '/permission',
+                        name: 'permission',
+                        meta: {
+                            name: '权限管理',
+                            icon: 'table'
+                        },
+                        children: [
+                            {
+                                path: 'user',
+                                name: 'user-manage',
+                                meta: {
+                                    name: '用户管理',
+                                    icon: 'table'
+                                },
+                                id: 234
+                            },
+                            {
+                                path: 'role',
+                                name: 'role-manage',
+                                meta: {
+                                    name: '角色管理',
+                                    icon: 'eye'
+                                },
+                                id: 465
+                            },
+                            {
+                                path: 'menu',
+                                name: 'menu-manage',
+                                meta: {
+                                    name: '菜单管理',
+                                    icon: 'tree'
+                                }
+                            }
+                        ]
+                    }
+                ]
                 this.SET_PERMISSION_LIST(labelPermission)
             } catch (e) {
                 console.log(e)
@@ -279,6 +299,9 @@ $light_gray: #eee;
         width: 520px;
         padding: 35px 35px 15px 35px;
         margin: 120px auto;
+        &::v-deep .el-input .el-input__inner {
+            color: white !important;
+        }
     }
     .tips {
         font-size: 14px;
@@ -317,9 +340,9 @@ $light_gray: #eee;
         cursor: pointer;
         user-select: none;
     }
-    .fontcontainer{
-        color:#889aa4;
-        padding-left:10px;
+    .fontcontainer {
+        color: #889aa4;
+        padding-left: 10px;
     }
 }
 </style>
