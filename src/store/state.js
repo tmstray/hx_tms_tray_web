@@ -65,6 +65,37 @@ export default {
                     }
                 }
             ]
+        },
+        {
+            path: '/systemManager',
+            name: 'systemManager',
+            meta: {
+                icon: 'el-icon-thumb',
+                name: '系统管理'
+            },
+            children: [
+                {
+                    path: 'user',
+                    name: 'user',
+                    meta: {
+                        name: '用户管理'
+                    }
+                },
+                {
+                    path: 'role',
+                    name: 'role',
+                    meta: {
+                        name: '角色管理'
+                    }
+                },
+                {
+                    path: 'menu',
+                    name: 'menu',
+                    meta: {
+                        name: '菜单管理'
+                    }
+                }
+            ]
         }
     ]
 }

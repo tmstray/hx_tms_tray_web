@@ -22,16 +22,21 @@ Vue.use(ElementUI)
 Vue.config.productionTip = false
 console.log('router', router)
 router.beforeEach((to, from, next) => {
-    console.log(to)
-    next()
-    // var token = sessionStorage.getItem('token')
-    // if (to.path === '/login') {
-    //     next()
-    // }
-    // if (!token) {
-    //     console.log('跳转验证')
-    //     next({ path: '/login' })
-    // }
+    console.log('---->',store.state.UserToken,to)
+    
+    if (!store.state.UserToken) {
+        if (to.path === '/login') {
+            next()
+        }else{
+            next({path: '/login'})
+        }
+        
+    }else{
+        if (to.path === '/login') {
+            next({path:"/"})
+        }
+        next()
+    }
     // if (!store.state.UserToken) {
     //         if (to.matched.length > 0 && !to.matched.some(record => record.meta.requiresAuth)) {
     //             next()
@@ -42,17 +47,17 @@ router.beforeEach((to, from, next) => {
     //         if (!store.state.permission.permissionList) {
     //             console.log('path', to.path)
 
-//             // store.dispatch('permission/FETCH_PERMISSION').then(() => {
-//             //     next({ path: to.path })
-//             // })
-//         } else {
-//             if (to.path !== '/login') {
-//                 next()
-//             } else {
-//                 next(from.fullPath)
-//             }
-//         }
-//     }
+    //         // store.dispatch('permission/FETCH_PERMISSION').then(() => {
+    //         //     next({ path: to.path })
+    //         // })
+    //     } else {
+    //         if (to.path !== '/login') {
+    //             next()
+    //         } else {
+    //             next(from.fullPath)
+    //         }
+    //     }
+    // }
 })
 
 router.afterEach((to, from, next) => {

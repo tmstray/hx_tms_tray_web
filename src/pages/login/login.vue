@@ -93,155 +93,16 @@ export default {
         },
         async login() {
             try {
-                let data = await login(this.loginForm)
-                let token = data.token
+                // debugger
+
+                let res = await login(this.loginForm)
+                // console.log("=======================Token:",data)
+                let token = res.data.token
                 this.$store.commit('LOGIN_IN', token)
+                console.log(this.$store.state.UserToken)
                 this.$router.replace('/')
                 // 获取权限
-
-                let labelPermission = [
-                    {
-                        path: '',
-                        name: 'container',
-                        redirect: 'home',
-                        meta: {
-                            requiresAuth: true,
-                            name: '首页',
-                            icon: 'tree'
-                        },
-                        children: [
-                            {
-                                id: 1,
-                                path: 'home',
-                                name: 'home',
-                                meta: {
-                                    name: '首页',
-                                    icon: 'tree'
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        path: 'order',
-                        name: 'order-manage',
-                        meta: {
-                            name: '订单管理',
-                            icon: 'example'
-                        },
-                        children: [
-                            {
-                                path: 'list',
-                                name: 'order-list',
-                                meta: {
-                                    name: '订单列表',
-                                    icon: 'table'
-                                },
-                                id: 3123
-                            },
-                            {
-                                path: 'product',
-                                name: 'product-manage',
-                                meta: {
-                                    name: '生产管理',
-                                    icon: 'user'
-                                },
-                                children: [
-                                    {
-                                        path: 'list',
-                                        name: 'product-list',
-                                        meta: {
-                                            name: '生产列表',
-                                            icon: 'table'
-                                        },
-                                        id: 2345
-                                    },
-                                    {
-                                        path: 'review',
-                                        name: 'review-manage',
-                                        meta: {
-                                            name: '审核管理',
-                                            icon: 'eye'
-                                        },
-                                        id: 5345
-                                    }
-                                ]
-                            },
-                            {
-                                path: 'returnGoods',
-                                name: 'return-goods',
-                                meta: {
-                                    name: '退货管理',
-                                    icon: 'nested'
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        path: '/goods',
-                        name: 'goods',
-                        meta: {
-                            name: '产品管理',
-                            icon: 'user'
-                        },
-                        children: [
-                            {
-                                path: 'list',
-                                name: 'goods-list',
-                                meta: {
-                                    name: '产品列表',
-                                    icon: 'table'
-                                },
-                                id: 4234
-                            },
-                            {
-                                path: 'classify',
-                                name: 'goods-classify',
-                                meta: {
-                                    name: '产品分类',
-                                    icon: 'tree'
-                                },
-                                id: 4254
-                            }
-                        ]
-                    },
-                    {
-                        path: '/permission',
-                        name: 'permission',
-                        meta: {
-                            name: '权限管理',
-                            icon: 'table'
-                        },
-                        children: [
-                            {
-                                path: 'user',
-                                name: 'user-manage',
-                                meta: {
-                                    name: '用户管理',
-                                    icon: 'table'
-                                },
-                                id: 234
-                            },
-                            {
-                                path: 'role',
-                                name: 'role-manage',
-                                meta: {
-                                    name: '角色管理',
-                                    icon: 'eye'
-                                },
-                                id: 465
-                            },
-                            {
-                                path: 'menu',
-                                name: 'menu-manage',
-                                meta: {
-                                    name: '菜单管理',
-                                    icon: 'tree'
-                                }
-                            }
-                        ]
-                    }
-                ]
-                this.SET_PERMISSION_LIST(labelPermission)
+                // this.SET_PERMISSION_LIST(labelPermission)
             } catch (e) {
                 console.log(e)
             }

@@ -46,9 +46,10 @@ var instance = axios.create({
 instance.interceptors.request.use(
     config => {
         // // 请求头添加token
-        // if (store.state.UserToken) {
-        //     config.headers.Authorization = `Bearer ${store.state.UserToken}`
-        // }
+        // console.log("========================1212" ,store.state.UserToken)
+        if (store.state.UserToken) {
+            config.headers.Authorization = `${store.state.UserToken}`
+        }
         if (config.method === 'post' && config.headers.serialize) {
             config.data = serialize(config.data)
             delete config.data.serialize

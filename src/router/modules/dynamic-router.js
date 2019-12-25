@@ -142,6 +142,30 @@ const dynamicRoutes = [{
             meta: {
                 name: '空托库存清单'
             }
+        },
+        {
+            path: '/systemManager/user',
+            component: () => import('@/pages/user/index'),
+            name: 'user',
+            meta: {
+                name: '用户管理'
+            }
+        },
+        {
+            path: '/systemManager/role',
+            component: () => import('@/pages/role/index'),
+            name: 'role',
+            meta: {
+                name: '角色管理'
+            }
+        },
+        {
+            path: '/systemManager/menu',
+            component: () => import('@/pages/menu/index'),
+            name: 'menu',
+            meta: {
+                name: '菜单管理'
+            }
         }
     ]
 }]

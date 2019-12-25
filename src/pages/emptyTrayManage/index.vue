@@ -1,20 +1,17 @@
 <template>
     <div class="emptyTrayManage">
-        <div class="btnBar">
-            <el-button
-                type="primary"
-                class="el-button el-button--primary el-button--small"
-                @click="openDialog3"
-            >初始化</el-button>
-            <el-button
-                class="el-button el-button--primary el-button--small"
-                type="primary"
-                icon="el-icon-download"
-                @click="downloadTemplate"
-            >下载模板</el-button>
-        </div>
-        <div class="line2"></div>
-        <el-form :inline="true" :model="search" class="searchBar">
+        <el-button
+            type="primary"
+            class="el-button el-button--primary el-button--small"
+            @click="openDialog3"
+        >初始化</el-button>
+        <el-button
+            class="el-button el-button--primary el-button--small"
+            type="primary"
+            icon="el-icon-download"
+            @click="downloadTemplate"
+        >下载模板</el-button>
+        <el-form :inline="true" :model="search" class="demo-form-inline">
             <el-form-item label="托盘ID:">
                 <el-input v-model="search.rfid"></el-input>
             </el-form-item>
@@ -36,7 +33,8 @@
                     @change="validateEndTime"
                     :picker-options="pickerOptions"
                     value-format="yyyy-MM-dd"
-                ></el-date-picker>至
+                ></el-date-picker>
+                至
                 <el-date-picker
                     v-model="search.endTime"
                     type="date"
@@ -65,13 +63,13 @@
             </el-form-item>
         </el-form>
         <el-table :data="tableData" style="width: 100%" border>
-            <el-table-column type="index" label="空托库存清单" align="center" width="50">
+            <el-table-column type="index" label="空托库存清单" align="center">
                 <el-table-column type="index" label="序号" width="50" align="center" />
-                <el-table-column label="入库时间" prop="initTime" align="center" width="200" fixed />
-                <el-table-column label="托盘ID" prop="rfid" align="center" width="220" />
+                <el-table-column label="入库时间" prop="initTime" align="center" width="170" fixed/>
+                <el-table-column label="托盘ID" prop="rfid" align="center" width="160" />
                 <el-table-column label="托盘流转状态" prop="rfidStatusName" align="center" width="70" />
                 <el-table-column label="托盘健康状态" prop="rfidHealthName" align="center" width="70" />
-                <el-table-column label="最后更新时间" prop="updateTime" align="center" width="200" />
+                <el-table-column label="最后更新时间" prop="updateTime" align="center" width="160" />
                 <el-table-column label="修改人" prop="updateBy" align="center" />
                 <el-table-column label="报损/报废原因" align="center">
                     <template slot-scope="scope">
@@ -79,7 +77,7 @@
                         <p v-if="parseInt(scope.row.rfidHealth) ===2">{{ scope.row.scrappedReason }}</p>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" fixed="right" align="center" width="300">
+                <el-table-column label="操作" fixed="right" align="center" width="262">
                     <template slot-scope="scope">
                         <el-button
                             type="primary"
@@ -103,10 +101,10 @@
             layout="total, sizes, prev, pager, next, jumper"
         ></el-pagination>
         <!-- 报损 -->
-        <el-dialog title="报损" :visible.sync="dialogVisible" width="30%" center>
-            <el-form ref="form" :model="formObj" label-width="80px">
+        <el-dialog title="报损" :visible.sync="dialogVisible" width="50%" center>
+            <el-form ref="form" :model="formObj">
                 <el-form-item label="报损原因" props="damagedReason" :rules="rules">
-                    <el-input type="textarea" :rows="3" v-model="formObj.damagedReason" maxlength="50"></el-input>
+                    <el-input v-model="formObj.damagedReason" maxlength="50"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -115,10 +113,10 @@
             </span>
         </el-dialog>
         <!-- 报废 -->
-        <el-dialog title="报废" :visible.sync="dialogVisible2" width="30%" center>
-            <el-form ref="form" :model="formObj2" label-width="80px">
+        <el-dialog title="报废" :visible.sync="dialogVisible2" width="50%" center>
+            <el-form ref="form" :model="formObj2">
                 <el-form-item label="报废原因" props="scrappedReason" :rules="rules">
-                    <el-input type="textarea" :rows="3" v-model="formObj2.scrappedReason" maxlength="50"></el-input>
+                    <el-input v-model="formObj2.scrappedReason" maxlength="50"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -158,6 +156,8 @@ import {
     forzenRow,
     exprotTemplate
 } from '@/api/emptyTrayManage.js'
+import DIC from '@/api/dic.js'
+
 /** urlPort ：导入导出模板设置访问URL 上线时需要设置为服务器：TODO */
 const urlPort = 'http://10.248.61.27:9081'
 // const urlPort = 'http://10.248.10.141:9081'
@@ -308,12 +308,12 @@ export default {
             }).then(res => {
                 this.$message.success('报废操作成功！')
                 this.dialogVisible2 = false
-                this.search.rfid = ''
-                this.search.rfidHealth = ''
-                this.search.startTime = ''
-                this.search.endTime = ''
-                this.search.pageNum = 1
-                this.search.pageSize = 10
+                ;(this.search.rfid = ''),
+                    (this.search.rfidHealth = ''),
+                    (this.search.startTime = ''),
+                    (this.search.endTime = ''),
+                    (this.search.pageNum = 1),
+                    (this.search.pageSize = 10)
                 this.handleList()
             })
         },
@@ -356,6 +356,7 @@ export default {
                 if (val > this.search.endTime) {
                     this.$message.error('开始时间不能大于结束时间')
                     this.search.startTime = ''
+                    return
                 }
             }
         },
@@ -364,6 +365,7 @@ export default {
                 if (val < this.search.startTime) {
                     this.$message.error('结束时间不能小于开始时间')
                     this.search.endTime = ''
+                    return
                 }
             }
         }
@@ -373,14 +375,14 @@ export default {
 
 <style  lang="scss">
 .emptyTrayManage {
-    // .search {
-    //     display: flex;
-    //     flex-direction: row;
-    //     justify-content: space-between;
-    //     .el-select {
-    //         margin-right: 20px;
-    //     }
-    // }
+    .search {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .el-select {
+            margin-right: 20px;
+        }
+    }
     .el-upload {
         display: block;
     }
