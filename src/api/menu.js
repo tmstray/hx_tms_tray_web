@@ -4,7 +4,7 @@ const urlLists = {
     updateStockInfo: '/trayInfo/updateTrayInfo'
 }
 export const getMenuList = (params) => {
-    return http.post(urlLists.getMenuList, params)
+    return http.get(urlLists.getMenuList, params)
 }
 export const updateStockInfo = (params) => {
     return http.post(urlLists.updateStockInfo, params)
