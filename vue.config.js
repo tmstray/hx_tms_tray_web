@@ -12,15 +12,17 @@ function resolve(dir) {
     return path.join(__dirname, dir)
 }
 const proxyTargetMap = {
-    // prod: 'http://10.248.61.27:9081', // 服务器
-    prod: 'http://10.248.10.140:9081', // 本地环境
+    prod: 'http://10.248.61.27:9081', // 服务器
+    // prod: 'http://10.248.10.140:9081', // 本地环境
+    // prod: 'http://10.248.10.141:9081', // 本地环境
+    // prod: 'http://10.248.10.34:9081', // 本地环境
     // prod: 'http://10.248.24.82:8181',
     // prod: 'http://10.248.22.89:8080/tms-tray',
     randy: 'http://47.105.71.81:3306',
     peter: 'http://10.248.22.2:8080'
 }
 let proxyTarget = proxyTargetMap.prod
-let publicPath = process.env.NODE_ENV === 'production' ? './' : '/'
+let publicPath = process.env.NODE_ENV === 'production' ? '././' : '/'
 console.log('publicPath', process.env.NODE_ENV)
 let dllPublishPath = '/vendor'
 module.exports = {
@@ -118,7 +120,6 @@ module.exports = {
             '/': {
                 target: proxyTarget,
                 changeOrigin: true,
-                ws: false,
                 pathRewrite: {
                     '^/': ''
                 }
@@ -129,8 +130,8 @@ module.exports = {
     // eslint-disable-next-line no-dupe-keys
     configureWebpack: config => {
         if (process.env.NODE_ENV === 'production') {
-            config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
-            config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true
+            // config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
+            // config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true
             // 为生产环境修改配置...
             config.plugins.push(
                 new webpack.DllReferencePlugin({
