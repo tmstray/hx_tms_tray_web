@@ -1,7 +1,9 @@
 <template>
     <div class="user">
         <div class="search" align="right">
-            <div></div>
+            <div>
+                <el-button @click="add">新增</el-button>
+            </div>
             <el-form :inline="true" class="searchBar">
                 <el-form-item label="托盘流转状态:">
                     <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
@@ -91,6 +93,9 @@ export default {
         },
         searchByTypeAndStatus() {
             this.handleList()
+        },
+        add(){
+            
         }
     }
 }
