@@ -164,7 +164,7 @@
 </template>
 
 <script>
-import { getUserLists } from '@/api/user.js'
+import { getUserLists ,addUser} from '@/api/user.js'
 import DIC from '@/api/dic.js'
 export default {
     data() {
@@ -259,6 +259,11 @@ export default {
                 
         },
         confirm(){
+            getUserLists(this.user).then(res => {
+                console.log(res)
+                this.tableData = res.data.rows
+                this.total = res.data.total
+            })
             this.isDialog=false
         },
         cancel(){
