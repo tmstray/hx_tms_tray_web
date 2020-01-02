@@ -82,8 +82,8 @@
             <el-form :model="menuData"  ref="menuData" :rules="rules">
                 <el-row :gutter="24">
                     <el-col :span="20">
-                        <el-form-item label="上级菜单" :label-width="formLabelWidth" prop="menuName">
-                            <el-input v-model="menuData.menuName" placeholder="请输入上级菜单" @focus="focus1()"></el-input>
+                        <el-form-item label="上级菜单" :label-width="formLabelWidth" prop="parentName">
+                            <el-input v-model="menuData.parentName" placeholder="请输入上级菜单" @focus="focus1()"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -164,8 +164,9 @@
 </template>
 
 <script>
-import { getMenuList } from '@/api/menu.js'
+import { getMenuList,addMenus,updateMenus } from '@/api/menu.js'
 import DIC from '@/api/dic.js'
+import http from '@/config/httpConfig.js'
 export default {
     data() {
         return {
@@ -195,10 +196,7 @@ export default {
             },
             menuId:"",
             filterText:"",
-            treeData:{
-                menuName:"",
-                parentId:""
-            }
+            selectMenuId:""
         }
     },
     components: {},
@@ -228,8 +226,7 @@ export default {
             return data.menuName.indexOf(value) !== -1;
         },
         handleNodeClick(data){
-            this.treeData.menuName = data.menuName 
-            this.treeData.parentId = data.parentId
+            this.selectMenuId = data.menuId
         },
         focus1(){
             this.menuDialog=true
@@ -238,8 +235,8 @@ export default {
             this.menuDialog=false
         },
         sureParty(){
-            this.menuData.menuName = this.treeData.menuName
-            this.menuData.parentId = this.treeData.parentId
+            this.menuData.parentName = this.getParentName(this.selectMenuId).parentName
+            this.menuData.parentId = this.getParentName(this.selectMenuId).parentId
             this.menuDialog=false
         },
         handleCurrentChange(val) {
@@ -261,12 +258,13 @@ export default {
             this.handleList()
         },
         add(){
+            this.menuData = {}
             this.type='add'
             this.isDialog=true
         },
         deleteMenu(){
-            if(this.selectData.length<1){
-                this.$message({type: 'warning',message: '请至少选择一条数据'});   
+            if(this.selectData.length!=1){
+                this.$message({type: 'warning',message: '一次只能删除一条数据'});   
                 return;
             }
             this.$confirm('确定要删除选定的数据?', '提示', {
@@ -274,12 +272,23 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                console.log("111")
+                let menuId = this.selectData[0].menuId
+                http.delete("/system/menu/"+menuId).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '删除成功'});
+                        this.handleList()
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});    
+                    }
+                })
             }).catch(() => {
                 this.$message({type: 'info',message: '已取消删除'});          
             });
         },
         update(row){
+            this.menuData = row
+            this.menuData.parentName = this.getParentName(row.menuId).parentName
+            this.menuData.parentId = this.getParentName(row.menuId).parentId
             this.type="update"
             this.isDialog=true
         },
@@ -287,7 +296,27 @@ export default {
             this.selectData=val
         },
         confirm(){
-            this.isDialog=false
+            if(this.type=='add'){
+                addMenus(this.menuData).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '新增成功'});  
+                        this.handleList()
+                        this.isDialog=false
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});  
+                    }
+                })
+            }else if(this.type == "update"){
+                updateMenus(this.menuData).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '修改成功'});  
+                        this.handleList()
+                        this.isDialog=false
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});  
+                    }
+                })
+            }
         },
         cancel(){
             this.isDialog=false
@@ -297,6 +326,37 @@ export default {
         },
         handleChange(){
 
+        },
+        //获取上级菜单名称
+        getParentName(menuId){
+            let treeObj ={
+                parentName:"",
+                parentId:0
+            }
+            for(let i=0;i<this.tableData.length;i++){
+                if(menuId == this.tableData[i].menuId){
+                    treeObj.parentName = "总目录"
+                    treeObj.parentId = this.tableData[i].parentId
+                    break;
+                }
+                
+                for(let j=0;j<this.tableData[i].children.length;j++){
+                    if(menuId == this.tableData[i].children[j].menuId){
+                        treeObj.parentName = this.tableData[i].menuName
+                        treeObj.parentId = this.tableData[i].children[j].parentId
+                        break;
+                    }
+
+                    for(let k=0;k<this.tableData[i].children[j].children.length;k++){
+                        if(menuId == this.tableData[i].children[j].children[k].menuId){
+                            treeObj.parentName = this.tableData[i].children[j].menuName
+                            treeObj.parentId = this.tableData[i].children[j].children[k].parentId
+                            break;
+                        }
+                    }
+                }
+            }
+            return treeObj
         }
     }
 }
