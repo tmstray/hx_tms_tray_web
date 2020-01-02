@@ -82,8 +82,8 @@
             <el-form :model="menuData"  ref="menuData" :rules="rules">
                 <el-row :gutter="24">
                     <el-col :span="20">
-                        <el-form-item label="上级菜单" :label-width="formLabelWidth" prop="parentId">
-                        <el-input v-model="menuData.parentId" placeholder="请输入上级菜单"></el-input>
+                        <el-form-item label="上级菜单" :label-width="formLabelWidth" prop="menuName">
+                            <el-input v-model="menuData.menuName" placeholder="请输入上级菜单" @focus="focus1()"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -134,6 +134,32 @@
                 </div>
             </el-form>
         </el-dialog>
+         <!-- 所有菜单 -->
+        <el-dialog class="selectDialog" title="选择部门" :visible.sync="menuDialog" width="50%"
+        style="margin-top:3vh;z-index:100 !important;" @close="closeDialog" :close-on-click-modal="false">
+            <div style="width:300px;margin-top:20px;margin-bottom:10px;">
+                <el-input class="search-input" size="mini" placeholder="输入部门名称..." v-model="filterText" clearable>
+                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+            </div>
+            <el-tree 
+                :data="tableData" 
+                :props="defaultProps" 
+                node-key="menuId" 
+                @node-click="handleNodeClick"
+                :default-expand-all="defaultexpand"
+                :filter-node-method="filterNode"
+                empty-text="暂无数据"
+                ref="tree"
+            >
+                <span class="custom-tree-node" slot-scope="{ node, data }" :class='[data.orgCode==menuId?"custom-tree-node1":"custom-tree-node"]'>
+                    <span>{{ node.label }}</span>
+                </span>
+            </el-tree>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="sureParty()">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -160,10 +186,33 @@ export default {
             menuData:{
 
             },
-            type:''
+            type:'',
+            menuDialog:false,
+            defaultexpand: false,
+            defaultProps: {
+                children: 'children',
+                label: 'menuName'
+            },
+            menuId:"",
+            filterText:"",
+            treeData:{
+                menuName:"",
+                parentId:""
+            }
         }
     },
     components: {},
+    watch: {
+        filterText(val) {
+            this.$refs.tree.filter(val);
+            if (val == "") {
+                this.defaultexpand = false;
+                for (var i = 0; i < this.$refs.tree.store._getAllNodes().length; i++) {
+                this.$refs.tree.store._getAllNodes()[i].expanded = this.defaultexpand;
+                }
+            }
+        }
+    },
     computed:{
         title(){
             if(this.type=='add') return "新增菜单"
@@ -174,6 +223,25 @@ export default {
         this.handleList()
     },
     methods: {
+        filterNode(value, data) {
+            if (!value) return true;
+            return data.menuName.indexOf(value) !== -1;
+        },
+        handleNodeClick(data){
+            this.treeData.menuName = data.menuName 
+            this.treeData.parentId = data.parentId
+        },
+        focus1(){
+            this.menuDialog=true
+        },
+        closeDialog(){
+            this.menuDialog=false
+        },
+        sureParty(){
+            this.menuData.menuName = this.treeData.menuName
+            this.menuData.parentId = this.treeData.parentId
+            this.menuDialog=false
+        },
         handleCurrentChange(val) {
             this.pageNum = val
             this.handleList()
@@ -242,4 +310,7 @@ export default {
         justify-content: space-between;
     }
 }
+.el-input-number .el-input-number__decrease, .el-input-number .el-input-number__increase{
+        height: 37px !important;
+    }
 </style>
