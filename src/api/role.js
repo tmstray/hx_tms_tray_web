@@ -4,7 +4,8 @@ const urlLists = {
     updateStockInfo: '/trayInfo/updateTrayInfo',
     getMenuList:"/system/menu/list",
     addRole:"/system/role",
-    deleteRole:"/system/role/{roleIds}"
+    deleteRole:"/system/role/{roleIds}",
+    updateRole:"/system/role"
 }
 export const getRoleList = (params) => {
     return http.get(urlLists.getRoleList, params)
@@ -20,4 +21,7 @@ export const addRole = (params) => {
 }
 export const deleteRole = (params) => {
     return http.delete(urlLists.deleteRole, params)
+}
+export const updateRole = (params) => {
+    return http.put(urlLists.updateRole, params)
 }

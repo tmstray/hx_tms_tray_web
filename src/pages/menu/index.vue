@@ -90,9 +90,9 @@
                 <el-row :gutter="24">
                     <el-col :span="20">
                         <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
-                            <el-radio v-model="menuData.menuType" label="0" @change="change()">目录</el-radio>
-                            <el-radio v-model="menuData.menuType" label="1" @change="change()">菜单</el-radio>
-                            <el-radio v-model="menuData.menuType" label="2" @change="change()">按钮</el-radio>
+                            <el-radio v-model="menuData.menuType" label="M" @change="change()">目录</el-radio>
+                            <el-radio v-model="menuData.menuType" label="C" @change="change()">菜单</el-radio>
+                            <el-radio v-model="menuData.menuType" label="F" @change="change()">按钮</el-radio>
                         </el-form-item>
                     </el-col>
                 </el-row>

@@ -53,7 +53,11 @@
             <el-table-column label="角色名称" prop="roleName"></el-table-column>
             <el-table-column label="权限字符" prop="roleKey"></el-table-column>
             <el-table-column label="显示顺序" prop="roleSort"></el-table-column>
-            <el-table-column label="状态" prop="status"></el-table-column>
+            <el-table-column label="状态" prop="status">
+                <template slot-scope="scope">
+                   {{getStatus(scope.row.status)}}
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="80" fixed='right'>
                 <template slot-scope="scope">
                     <el-button type="text" @click="update(scope.row)">修改</el-button>
@@ -157,7 +161,8 @@
 </template>
 
 <script>
-import { getRoleList ,getMenuList,addRole,deleteRole} from '@/api/role.js'
+import { getRoleList ,getMenuList,addRole,deleteRole,updateRole} from '@/api/role.js'
+import http from '@/config/httpConfig.js'
 import DIC from '@/api/dic.js'
 export default {
     data() {
@@ -201,8 +206,13 @@ export default {
     },
     created() {
         this.handleList()
+        this.getList()
     },
     methods: {
+        getStatus(row){
+            if(row == '0') return "正常"
+            else if(row == '1') return "停用"
+        },
         handleCurrentChange(val) {
             this.pageNum = val
             this.handleList()
@@ -224,7 +234,6 @@ export default {
         add(){
             this.roleData={}
             this.isDialog=true
-            this.getList()
             if(this.$refs.tree){
                 this.$refs.tree.setCheckedKeys([])
             }
@@ -247,25 +256,63 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                console.log("111")
+                this.roleData.roleIds = ""
+                for(let i=0;i<this.selectData.length;i++){
+                    this.roleData.roleIds+=this.selectData[i].roleId+","
+                }
+                http.delete("/system/role/"+this.roleData.roleIds).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '删除成功'});
+                        this.handleList()
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});    
+                    }
+                })
             }).catch(() => {
                 this.$message({type: 'info',message: '已取消删除'});          
             });
         },
         update(row){
-            this.getList()
             this.roleData=row
-            this.checkedList = this.roleData.menuIds
-            this.type="update"
-            this.isDialog=true
+            http.get('system/menu/roleMenuTreeselect/'+row.roleId).then(res=>{
+                this.checkedList = []
+                if(this.$refs.tree){
+                    this.$refs.tree.setCheckedKeys([])
+                }
+                for(let i=0;i<res.data.data.length;i++){
+                    this.checkedList.push(res.data.data[i])
+                }
+                this.type="update"
+                this.isDialog=true
+            })
         },
         confirm(){
-            console.log(this.$refs.tree.getCheckedKeys());
-            // this.roleData.menuIds= this.$refs.tree.getCheckedKeys()
-            // addRole(this.roleData).then(res=>{
-            //     console.log(res)
-            //     // this.isDialog=false
-            // })
+            this.roleData.menuIds = []
+            for(let i=0;i<this.$refs.tree.getCheckedKeys().length;i++){
+                 this.roleData.menuIds.push(this.$refs.tree.getCheckedKeys()[i])
+            }
+            console.log(this.roleData.menuIds);
+            if(this.type=='add'){
+                addRole(this.roleData).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '新增成功'});  
+                        this.handleList()
+                        this.isDialog=false
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});  
+                    }
+                })
+            }else if(this.type == "update"){
+                updateRole(this.roleData).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '修改成功'});  
+                        this.handleList()
+                        this.isDialog=false
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});  
+                    }
+                })
+            }
         },
         cancel(){
             this.isDialog=false

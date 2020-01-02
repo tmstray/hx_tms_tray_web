@@ -55,7 +55,7 @@ instance.interceptors.request.use(
             delete config.data.serialize
         }
         if (config.method === 'put') {
-            config.data = serialize(config.data)
+            axios.defaults.headers.post['Content-Type'] = 'application/json';
         }
 
         // if (config.method === 'get') {
@@ -188,6 +188,34 @@ http.put = function (url, data, options) {
     return new Promise((resolve, reject) => {
         instance
             .put(url, data, options)
+            .then(response => {
+                loading = document.getElementById('ajaxLoading')
+                loading.style.display = 'none'
+                if (response.data.code === 200) {
+                    resolve(response)
+                } else {
+                    // Message.error({
+                    //     message: response.msg
+                    // })
+                    reject(response)
+                }
+            })
+            .catch(err => {
+                loading = document.getElementById('ajaxLoading')
+                loading.style.display = 'none'
+                console.log(err.data)
+            })
+    })
+}
+http.delete = function (url, data, options) {
+    let loading
+    if (!options || options.isShowLoading !== false) {
+        loading = document.getElementById('ajaxLoading')
+        loading.style.display = 'block'
+    }
+    return new Promise((resolve, reject) => {
+        instance
+            .delete(url, data, options)
             .then(response => {
                 loading = document.getElementById('ajaxLoading')
                 loading.style.display = 'none'

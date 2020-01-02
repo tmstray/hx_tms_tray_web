@@ -54,7 +54,11 @@
             <el-table-column label="昵称" prop="nickName"></el-table-column>
             <el-table-column label="用户邮箱" prop="email"></el-table-column>
             <el-table-column label="手机号码" prop="phonenumber"></el-table-column>
-            <el-table-column label="状态" prop="status"></el-table-column>
+            <el-table-column label="状态" prop="status">
+                <template slot-scope="scope">
+                   {{getStatus(scope.row.status)}}
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="80" fixed='right'>
                 <template slot-scope="scope">
                     <el-button type="text" @click="update(scope.row)">修改</el-button>
@@ -93,13 +97,6 @@
                <el-input v-model="userData.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
           </el-col>
-        <el-col :span="12">
-            <el-form-item label="用户名称" :label-width="formLabelWidth" prop="userName">
-               <el-input v-model.number="userData.userName" placeholder="请输入用户名称"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="性别" :label-width="formLabelWidth" prop="sex">
                 <el-select
@@ -116,7 +113,23 @@
                 </el-select>
             </el-form-item>
           </el-col>
+            
+        </el-row>
+        <el-row :gutter="24">
           <el-col :span="12">
+            <el-form-item label="用户名称" :label-width="formLabelWidth" prop="userName">
+               <el-input v-model.number="userData.userName" placeholder="请输入用户名称"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+               <el-input v-model.number="userData.password" placeholder="请输入密码" type='password'></el-input>
+            </el-form-item>
+          </el-col>
+          
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
             <el-form-item label="状态" :label-width="formLabelWidth" prop="sex">
                 <el-radio v-model="userData.status" label="0" @change="change()">正常</el-radio>
                 <el-radio v-model="userData.status" label="1" @change="change()">停用</el-radio>
@@ -124,9 +137,11 @@
           </el-col>
         </el-row>
         <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="20">
             <el-form-item label="角色" :label-width="formLabelWidth" prop="roleIds">
-               
+               <el-checkbox-group v-model="checkedRoles" @change="handleCheckedCitiesChange">
+                    <el-checkbox v-for="item in roleList" :label="item.roleId" :key="item.roleId">{{item.roleName}}</el-checkbox>
+                </el-checkbox-group>
             </el-form-item>
           </el-col>
         </el-row>
@@ -164,7 +179,8 @@
 </template>
 
 <script>
-import { getUserLists ,addUser} from '@/api/user.js'
+import { getUserLists ,addUser,deleteUsers,updateUsers} from '@/api/user.js'
+import http from '@/config/httpConfig.js'
 import DIC from '@/api/dic.js'
 export default {
     data() {
@@ -190,7 +206,9 @@ export default {
                 {label:"男",value:"0"},
                 {label:"女",value:"1"}
             ],
-            type:''
+            type:'',
+            roleList:[],
+            checkedRoles:[]
         }
     },
     components: {},
@@ -202,8 +220,13 @@ export default {
     },
     created() {
         this.handleList()
+        this.getRoleList()
     },
     methods: {
+        getStatus(row){
+            if(row == '0') return "正常"
+            else if(row == '1') return "停用"
+        },
         handleCurrentChange(val) {
             this.pageNum = val
             this.handleList()
@@ -224,10 +247,24 @@ export default {
         },
         update(row){
             this.userData=row
-            this.type='update'
-            this.isDialog=true
+            http.get("system/user/"+this.userData.userId).then(res=>{
+                this.checkedRoles = []
+                for(let i=0;i<res.data.roleIds.length;i++){
+                    this.checkedRoles.push(res.data.roleIds[i])
+                }
+                this.isDialog=true
+                this.type='update'
+            })
+        },
+        //获取角色列表
+        getRoleList(){
+            http.get("/system/role/optionselect",{}).then(res=>{
+                this.roleList=res.data.data
+            })
         },
         add(){
+            this.userData={}
+            this.checkedRoles=[]
             this.type='add'
             this.isDialog=true
         },
@@ -247,7 +284,18 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-            
+                this.userData.userIds = ""
+                for(let i=0;i<this.selectData.length;i++){
+                    this.userData.userIds+=this.selectData[i].userId+","
+                }
+                http.delete("/system/user/"+this.userData.userIds).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '删除成功'});
+                        this.handleList()
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});    
+                    }
+                })
             }).catch(() => {
                 this.$message({type: 'info',message: '已取消删除'});          
             });
@@ -259,15 +307,38 @@ export default {
                 
         },
         confirm(){
-            getUserLists(this.user).then(res => {
-                console.log(res)
-                this.tableData = res.data.rows
-                this.total = res.data.total
-            })
-            this.isDialog=false
+            this.userData.roleIds=[]
+            for(let i=0;i<this.checkedRoles.length;i++){
+                this.userData.roleIds.push(this.checkedRoles[i])
+            }
+            if(this.type=='add'){
+                addUser(this.userData).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '新增成功'});  
+                        this.handleList()
+                        this.isDialog=false
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});  
+                    }
+                })
+            }else{
+                updateUsers(this.userData).then(res=>{
+                    if(res.status=='200'){
+                        this.$message({type: 'success',message: '修改成功'});  
+                        this.handleList()
+                        this.isDialog=false
+                    }else{
+                        this.$message({type: 'warning',message: res.data.msg});  
+                    }
+                })
+            }
+            
         },
         cancel(){
             this.isDialog=false
+        },
+        handleCheckedCitiesChange(){
+            
         }
     }
 }
