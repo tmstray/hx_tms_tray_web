@@ -15,7 +15,7 @@
             v-if="v.meta&&v.meta.icon"
             :icon-class="v.meta.icon"
           ></svg-icon> -->
-          <span>{{v.meta.name}}</span>
+          <span>{{v.meta.title}}</span>
         </template>
         <el-menu-item-group>
           <my-nav :menuList="v.children"></my-nav>
@@ -35,7 +35,7 @@
           v-if="v.meta&&v.meta.icon"
           :icon-class="v.meta.icon"
         ></svg-icon> -->
-        <span slot="title">{{v.meta.name}}</span>
+        <span slot="title">{{v.meta.title}}</span>
       </el-menu-item>
     </template>
   </div>
@@ -56,7 +56,7 @@ export default {
     methods: {
         gotoRoute(v) {
             console.log('v', v)
-            var name = v.name
+            var name = v.title
             // 像topTab添加标签
             this.addView(v)
             this.$router.push({ name })
