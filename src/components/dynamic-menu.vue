@@ -56,9 +56,14 @@ export default {
     methods: {
         gotoRoute(v) {
             console.log('v', v)
-            var name = v.title
+            var name = v.path
             // 像topTab添加标签
             this.addView(v)
+            for(let i=0;i<this.visitedViews.length;i++){
+              if(this.visitedViews[i].params==undefined){
+                this.visitedViews.splice(i,1)
+              }
+            }
             this.$router.push({ name })
         },
         ...mapActions('tagsView', ['addView'])

@@ -42,9 +42,16 @@ let staticRotes = [
         component: NotFound
     }
 ]
+
+
 /* 初始路由 */
 console.log('routesMap', staticRotes.concat(routesMap))
 var router = new Router({
     routes: staticRotes.concat(routesMap)
 })
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default router

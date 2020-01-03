@@ -64,6 +64,9 @@ export default {
         ...mapState('tagsView', ['visitedViews', 'cachedViews']),
         ...mapState('permission', ['avatar', 'account'])
     },
+    created(){
+        console.log(this.visitedViews)
+    },
     created() {
         this.activeTab = this.$route.name
         this.addView(this.$route)
@@ -77,6 +80,8 @@ export default {
         },
         // tab页签选中事件
         onTabSelect(selTab) {
+            console.log(this.visitedViews)
+            console.log(selTab)
             this.$router.push({
                 name: selTab.name,
                 params: selTab.$attrs.params,
@@ -89,7 +94,9 @@ export default {
                 let nextTab =
                     res.visitedViews[res.delIndex - 1] ||
                     res.visitedViews[res.delIndex + 1]
+                console.log(nextTab)
                 if (nextTab) {
+                    nextTab.name=nextTab.name.toLowerCase();
                     this.$router.push({
                         name: nextTab.name,
                         params: nextTab.params,
