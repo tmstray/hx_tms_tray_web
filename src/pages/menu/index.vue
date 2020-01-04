@@ -18,16 +18,17 @@
             </el-row>
             <el-form :inline="true" class="searchBar">
                 <el-form-item label="托盘流转状态:">
-                    <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
+                    <!-- <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
                         <el-option
                             v-for="item in enum_rfidStatus"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
                         ></el-option>
-                    </el-select>
+                    </el-select> -->
+                    <el-input v-model="searchObj.menuName"></el-input>
                 </el-form-item>
-                <el-form-item label="托盘类型:">
+                <!-- <el-form-item label="托盘类型:">
                     <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
                         <el-option
                             v-for="item in enum_rfidType"
@@ -36,13 +37,13 @@
                             :value="item.value"
                         ></el-option>
                     </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item>
                     <el-button
                         type="primary"
                         icon="el-icon-search"
                         class="searchBtn"
-                        @click="handleList"
+                        @click="search"
                     >搜索</el-button>
                 </el-form-item>
             </el-form>
@@ -167,6 +168,7 @@
 import { getMenuList,addMenus,updateMenus } from '@/api/menu.js'
 import DIC from '@/api/dic.js'
 import http from '@/config/httpConfig.js'
+import { mapActions } from 'vuex'
 export default {
     data() {
         return {
@@ -196,10 +198,15 @@ export default {
             },
             menuId:"",
             filterText:"",
-            selectMenuId:""
+            selectMenuId:"",
+            searchObj:{
+                menuName:""
+            }
         }
     },
-    components: {},
+    components: {
+        
+    },
     watch: {
         filterText(val) {
             this.$refs.tree.filter(val);
@@ -221,6 +228,7 @@ export default {
         this.handleList()
     },
     methods: {
+        ...mapActions('tagsView', ['getAllMenus']),
         filterNode(value, data) {
             if (!value) return true;
             return data.menuName.indexOf(value) !== -1;
@@ -247,15 +255,19 @@ export default {
             this.pageSize = val
             this.handleList()
         },
-        handleList() {
-            getMenuList({}).then(res => {
-                console.log(res)
+        //查询菜单数据
+        search(){
+            getMenuList(this.searchObj).then(res => {
                 this.tableData = res.data.data
                 this.total = res.data.total
             })
         },
-        searchByTypeAndStatus() {
-            this.handleList()
+        handleList() {
+            getMenuList({}).then(res => {
+                console.log(res.data.data)
+                this.tableData = res.data.data
+                this.total = res.data.total
+            })
         },
         add(){
             this.menuData = {}
@@ -277,6 +289,7 @@ export default {
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '删除成功'});
                         this.handleList()
+                        this.getAllMenus()
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});    
                     }

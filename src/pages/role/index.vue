@@ -17,32 +17,18 @@
                 </el-col>
             </el-row>
             <el-form :inline="true" class="searchBar">
-                <el-form-item label="托盘流转状态:">
-                    <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
-                        <el-option
-                            v-for="item in enum_rfidStatus"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
-                    </el-select>
+                <el-form-item label="角色名称:">
+                    <el-input v-model="searchObj.roleName"></el-input>
                 </el-form-item>
-                <el-form-item label="托盘类型:">
-                    <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
-                        <el-option
-                            v-for="item in enum_rfidType"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
-                    </el-select>
+                <el-form-item label="角色权限:">
+                    <el-input v-model="searchObj.roleKey"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button
                         type="primary"
                         icon="el-icon-search"
                         class="searchBtn"
-                        @click="handleList"
+                        @click="search"
                     >搜索</el-button>
                 </el-form-item>
             </el-form>
@@ -68,9 +54,9 @@
             background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="pageNum"
-            :page-size="pageSize"
-            :total="total"
+            :current-page="searchObj.pageNum"
+            :page-size="searchObj.pageSize"
+            :total="searchObj.total"
             :page-sizes="[10, 20, 30, 40]"
             layout="total, sizes, prev, pager, next, jumper"
         ></el-pagination>
@@ -194,7 +180,14 @@ export default {
             menuId:"",
             expandedList:[],
             checkedList:[],
-            selectData:[]
+            selectData:[],
+            searchObj:{
+                roleName:"",
+                roleKey:"",
+                pageNum:"",
+                pageSize:10,
+                total:""
+            }
         }
     },
     components: {},
@@ -205,7 +198,7 @@ export default {
         }
     },
     created() {
-        this.handleList()
+        this.search()
         this.getList()
     },
     methods: {
@@ -214,22 +207,21 @@ export default {
             else if(row == '1') return "停用"
         },
         handleCurrentChange(val) {
-            this.pageNum = val
-            this.handleList()
+            this.searchObj.pageNum = val
+            this.search()
         },
         handleSizeChange(val) {
-            this.pageSize = val
-            this.handleList()
+            this.searchObj.pageSize = val
+            this.search()
         },
-        handleList() {
-            getRoleList({}).then(res => {
-                console.log(res)
+        search(){
+            getRoleList(this.searchObj).then(res => {
                 this.tableData = res.data.rows
-                this.total = res.data.total
+                this.searchObj.total = res.data.total
             })
         },
         searchByTypeAndStatus() {
-            this.handleList()
+            this.search()
         },
         add(){
             this.roleData={}
@@ -263,7 +255,7 @@ export default {
                 http.delete("/system/role/"+this.roleData.roleIds).then(res=>{
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '删除成功'});
-                        this.handleList()
+                        this.search()
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});    
                     }
@@ -296,7 +288,7 @@ export default {
                 addRole(this.roleData).then(res=>{
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '新增成功'});  
-                        this.handleList()
+                        this.search()
                         this.isDialog=false
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});  
@@ -306,7 +298,7 @@ export default {
                 updateRole(this.roleData).then(res=>{
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '修改成功'});  
-                        this.handleList()
+                        this.search()
                         this.isDialog=false
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});  

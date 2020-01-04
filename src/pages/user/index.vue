@@ -17,32 +17,18 @@
                 </el-col>
             </el-row>
             <el-form :inline="true" class="searchBar">
-                <el-form-item label="托盘流转状态:">
-                    <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
-                        <el-option
-                            v-for="item in enum_rfidStatus"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
-                    </el-select>
+                <el-form-item label="手机号码:">
+                    <el-input v-model="searchObj.phonenumber"></el-input>
                 </el-form-item>
-                <el-form-item label="托盘类型:">
-                    <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
-                        <el-option
-                            v-for="item in enum_rfidType"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
-                    </el-select>
+                <el-form-item label="用户账号:">
+                    <el-input v-model="searchObj.userName"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button
                         type="primary"
                         icon="el-icon-search"
                         class="searchBtn"
-                        @click="handleList"
+                        @click="search"
                     >搜索</el-button>
                 </el-form-item>
             </el-form>
@@ -69,9 +55,9 @@
             background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="pageNum"
-            :page-size="pageSize"
-            :total="total"
+            :current-page="searchObj.pageNum"
+            :page-size="searchObj.pageSize"
+            :total="searchObj.total"
             :page-sizes="[10, 20, 30, 40]"
             layout="total, sizes, prev, pager, next, jumper"
         ></el-pagination>
@@ -81,8 +67,8 @@
       <el-form :model="userData"  ref="userData" :rules="rules">
         <el-row :gutter="24">
           <el-col :span="12">
-            <el-form-item label="用户昵称" :label-width="formLabelWidth" prop="nickName">
-               <el-input v-model="userData.nickName" placeholder="请输入用户昵称"></el-input>
+            <el-form-item label="用户昵称" :label-width="formLabelWidth" prop="userName">
+               <el-input v-model="userData.userName" placeholder="请输入用户昵称"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -117,12 +103,12 @@
         </el-row>
         <el-row :gutter="24">
           <el-col :span="12">
-            <el-form-item label="用户名称" :label-width="formLabelWidth" prop="userName">
-               <el-input v-model.number="userData.userName" placeholder="请输入用户名称"></el-input>
+            <el-form-item label="用户名称" :label-width="formLabelWidth" prop="nickName">
+               <el-input v-model.number="userData.nickName" placeholder="请输入用户名称" :disabled="isAdmin"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+            <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-if = !isAdmin>
                <el-input v-model.number="userData.password" placeholder="请输入密码" type='password'></el-input>
             </el-form-item>
           </el-col>
@@ -208,7 +194,15 @@ export default {
             ],
             type:'',
             roleList:[],
-            checkedRoles:[]
+            checkedRoles:[],
+            isAdmin:false,
+            searchObj:{
+                phonenumber:"",
+                userName:"",
+                pageNum:"",
+                pageSize:10,
+                total:""
+            }
         }
     },
     components: {},
@@ -219,7 +213,7 @@ export default {
         }
     },
     created() {
-        this.handleList()
+        this.search()
         this.getRoleList()
     },
     methods: {
@@ -228,24 +222,28 @@ export default {
             else if(row == '1') return "停用"
         },
         handleCurrentChange(val) {
-            this.pageNum = val
-            this.handleList()
+            this.searchObj.pageNum = val
+            this.search()
         },
         handleSizeChange(val) {
-            this.pageSize = val
-            this.handleList()
+            this.searchObj.pageSize = val
+            this.search()
         },
-        handleList() {
-            getUserLists({}).then(res => {
-                console.log(res)
+        search(){
+            getUserLists(this.searchObj).then(res => {
                 this.tableData = res.data.rows
-                this.total = res.data.total
+                this.searchObj.total = res.data.total
             })
         },
         searchByTypeAndStatus() {
-            this.handleList()
+            this.search()
         },
         update(row){
+            if(row.nickName=="管理员"){
+                this.isAdmin = true
+            }else{
+                this.isAdmin = false
+            }
             this.userData=row
             http.get("system/user/"+this.userData.userId).then(res=>{
                 this.checkedRoles = []
@@ -291,7 +289,7 @@ export default {
                 http.delete("/system/user/"+this.userData.userIds).then(res=>{
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '删除成功'});
-                        this.handleList()
+                        this.search()
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});    
                     }
@@ -315,7 +313,7 @@ export default {
                 addUser(this.userData).then(res=>{
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '新增成功'});  
-                        this.handleList()
+                        this.search()
                         this.isDialog=false
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});  
@@ -325,7 +323,7 @@ export default {
                 updateUsers(this.userData).then(res=>{
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '修改成功'});  
-                        this.handleList()
+                        this.search()
                         this.isDialog=false
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});  

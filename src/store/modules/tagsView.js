@@ -3,12 +3,15 @@
  * @author lichenxi (2019-09-25)
  * @update --
  */
+import http from '@/config/httpConfig.js'
 const tagsView = {
     namespaced: true,
     state: {
         visitedViews: [],
         cachedViews: [],
-        delIndex: ''
+        delIndex: '',
+        menus:[],
+        userId:""
     },
     mutations: {
         ADD_VISITED_VIEW: (state, view) => {
@@ -88,8 +91,16 @@ const tagsView = {
                     break
                 }
             }
+        },
+        GET_ALL_MENUS:(state,payload)=>{
+            state.menus = []
+            for(let i=0;i<payload.length;i++){
+                state.menus.push(payload[i])
+            }
+        },
+        GEU_USER_ID:(state,payload)=>{
+            state.userId = payload
         }
-
     },
     actions: {
         addView(state, view) {
@@ -209,6 +220,16 @@ const tagsView = {
             commit
         }, view) {
             commit('UPDATE_VISITED_VIEW', view)
+        }
+        ,
+        getAllMenus({commit}){
+            http.get('getRouters').then(res=>{
+                commit('GET_ALL_MENUS', res.data.data)
+            })
+        }
+        ,
+        getUserId({commit},payload){
+            commit('GEU_USER_ID',payload)
         }
     }
 }

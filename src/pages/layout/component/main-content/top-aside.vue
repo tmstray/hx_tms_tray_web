@@ -24,14 +24,14 @@
                 <img class="user-img" :src="avatar" alt="">
                 欢迎
                 <span class="user-name" v-if="account">{{account}}</span>
-                <span class="user-name" v-else>admin</span>
-                <el-dropdown trigger="click" placement="top">
+                <span class="user-name" v-else>{{userName}}</span>
+                <el-dropdown trigger="click" placement="top" @command="handleCommand"> 
                     <span class="el-dropdown-link">
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>个人中心</el-dropdown-item>
-                        <el-dropdown-item>修改密码</el-dropdown-item>
+                        <el-dropdown-item command="1">个人中心</el-dropdown-item>
+                        <el-dropdown-item command="2">修改密码</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -39,31 +39,106 @@
                 <el-button  class="logout-button" size='mini'>登出</el-button>
             </div>
         </div>
+        <el-dialog title="修改密码" 
+            :visible.sync="isDialog" 
+            :modal-append-to-body="false" 
+            :before-close="cancel" 
+            style="width:70%;margin:auto;margin-top:50px;"
+            :close-on-click-modal="false"
+            append-to-body>
+          <el-form>
+              <el-row :gutter="24">
+                <el-col :span="18">
+                  <el-form-item label="原密码" :label-width="formLabelWidth">
+                    <el-input v-model="originPassword"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="24">
+                <el-col :span="18">
+                  <el-form-item label="新密码" :label-width="formLabelWidth">
+                    <el-input v-model="newPassword" :type="'password'"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="24">
+                <el-col :span="18">
+                  <el-form-item label="确认密码" :label-width="formLabelWidth">
+                    <el-input v-model="newpwdAgain" :type="'password'"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+          </el-form>
+          <div class="button-container" style="margin-top:20px;">
+             <div style="display: flex;justify-content: space-between;margin:0 20%;">
+                <el-button @click="cancel" style="margin-left:10px;width:80px;height:30px;">关闭</el-button>
+                <el-button @click="confirm" style="margin-left:100px;width:80px;height:30px;">确定</el-button>
+            </div>
+          </div>
+    </el-dialog>
     </aside>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-
+import http from '@/config/httpConfig.js'
 export default {
     data() {
-        return {}
+        return {
+            isDialog:false,
+            formLabelWidth:"150px",
+            originPassword:"",
+            newPassword:"",
+            newpwdAgain:"",
+            userName:""
+        }
     },
     computed: {
         ...mapState(['isSidebarNavCollapse', 'crumbList']),
-        ...mapState('permission', ['avatar', 'account'])
+        ...mapState('permission', ['avatar', 'account']),
     },
     methods: {
         toggleNavCollapse() {
             this.$store.commit('toggleNavCollapse')
         },
         loginOut() {
-            console.log('this', this)
             this.$store.commit('LOGIN_OUT')
             this.$router.push({ path: '/login' })
             /* 防止切换角色时addRoutes重复添加路由导致出现警告 */
             // window.location.reload()
+        },
+        handleCommand(item){
+            if(item=='2'){
+                console.log(localStorage.getItem('userId'))
+                this.isDialog=true
+            }
+        },
+        cancel(){
+            this.isDialog=false
+        },
+        confirm(){
+            if(this.newPassword!=this.newpwdAgain){
+                this.$message({type: 'warning',message: "两次密码输入不一致"});   
+                return ; 
+            }
+            http.put("/system/user/resetPwd",{
+                userId:localStorage.getItem('userId'),
+                oldPassword:this.originPassword,
+                password:this.newPassword
+            }).then(res=>{
+                if(res.status=='200'){
+                    this.$message({type: 'success',message: '修改成功'});
+                    this.$store.commit('LOGIN_OUT')
+                    this.$router.push({ path: '/login' })
+                    this.isDialog=false
+                }else{
+                    this.$message({type: 'warning',message: res.data.msg});
+                }
+            })
         }
+    },
+    mounted(){
+        this.userName=localStorage.getItem('userName')
     }
 }
 </script>

@@ -10,7 +10,7 @@ export default {
     name: 'App',
     components: {
         // Mycontent
-    }
+    },
 }
 </script>
 

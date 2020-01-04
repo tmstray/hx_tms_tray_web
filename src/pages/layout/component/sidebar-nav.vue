@@ -6,36 +6,46 @@
         active-text-color="#4dbcff"
         :default-active="currentMenu"
     >
-        <DynamicMenu :menuList="sidebarMenu"></DynamicMenu>
+        <DynamicMenu :menuList="menus"></DynamicMenu>
     </el-menu>
 </template>
 
 <script>
 import DynamicMenu from '@/components/dynamic-menu'
-import { mapState } from 'vuex'
+import { mapState ,mapActions} from 'vuex'
 import http from '@/config/httpConfig.js'
-
 export default {
     data() {
         return {
             isCollapse: true,
-            sidebarMenu: [
+            // sidebarMenu: [
         
-            ]
+            // ]
         }
     },
     computed: {
         ...mapState(['isSidebarNavCollapse']),
-        ...mapState('permission', [ 'currentMenu'])
+        ...mapState('permission', [ 'currentMenu']),
+        ...mapState('tagsView', [ 'menus']),
     },
-    methods: {},
+    methods: {
+
+    },
     components: {
         DynamicMenu
     },
     mounted(){
-        http.get('getRouters').then(res=>{
-            this.sidebarMenu = res.data.data
-        })
+        
+    },
+    created(){
+        if(this.menus.length=='0'){
+            http.get('getRouters').then(res=>{
+                for(let i=0;i<res.data.data.length;i++){
+                    this.menus.push(res.data.data[i])
+                }
+            })
+        }
+        
     }
 }
 </script>

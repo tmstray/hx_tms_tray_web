@@ -34,7 +34,7 @@
                     type="primary"
                     style="width:100%;"
                     :loading="loading"
-                    @click.native.prevent="login"
+                    @click.native.prevent="loginin"
                 >Sign in</el-button>
             </el-form-item>
             <div class="tips">用户为admin的时候，能够看到所有的权限列表，其余账号只能看到部分</div>
@@ -44,7 +44,8 @@
 
 <script>
 import { login } from '@/api/permission'
-import { mapMutations } from 'vuex'
+import { mapMutations,mapActions } from 'vuex'
+import http from '@/config/httpConfig.js'
 export default {
     data() {
         const validateUsername = (rule, value, callback) => {
@@ -83,6 +84,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions('tagsView', ['getUserId','getAllMenus']),
         ...mapMutations('permission', ['SET_PERMISSION_LIST']),
         showPwd() {
             if (this.pwdType === 'password') {
@@ -91,21 +93,43 @@ export default {
                 this.pwdType = 'password'
             }
         },
-        async login() {
-            try {
-                // debugger
-
-                let res = await login(this.loginForm)
-                // console.log("=======================Token:",data)
-                let token = res.data.token
-                this.$store.commit('LOGIN_IN', token)
-                console.log(this.$store.state.UserToken)
-                this.$router.replace('/')
-                // 获取权限
-                // this.SET_PERMISSION_LIST(labelPermission)
-            } catch (e) {
-                console.log(e)
-            }
+        //登录
+        loginin() {
+            this.getToken().then(data=>{
+                return this.getMenus()
+            }).then(data=>{
+                return this.pageIn()
+            })
+        },
+        //获取token
+        getToken(){
+            return new Promise((resolve,reject)=>{
+                login(this.loginForm).then(res=>{
+                    let token = res.data.token
+                    this.$store.commit('LOGIN_IN', token)
+                    resolve(res)
+                })
+            })
+        },
+        //获取菜单
+        getMenus(){
+            return new Promise((resolve,reject)=>{
+                this.getAllMenus()
+                resolve('res')
+            })
+        },
+        //进入页面
+        pageIn(){
+            return new Promise((resolve,reject)=>{
+                http.get('getInfo').then(res=>{
+                    console.log(res.data.user.userId)
+                    console.log(res.data.user.userName)
+                    localStorage.setItem('userId',res.data.user.userId)
+                    localStorage.setItem('userName',res.data.user.userName)
+                    this.$router.replace('/')
+                    resolve(res)
+                })
+            })
         }
     }
 }

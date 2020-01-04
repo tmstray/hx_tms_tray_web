@@ -12,5 +12,5 @@ export default {
         console.log('router', router)
         let crumbList = router[1].meta.name.split('/')
         state.crumbList = crumbList
-    }
+    },
 }

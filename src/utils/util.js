@@ -1,3 +1,4 @@
+
 // 表单序列化
 export const serialize = data => {
     let list = []
@@ -6,3 +7,6 @@ export const serialize = data => {
     })
     return list.join('&')
 }
+
+//获取所有菜单
+
