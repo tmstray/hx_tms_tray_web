@@ -199,9 +199,9 @@ export default {
             searchObj:{
                 phonenumber:"",
                 userName:"",
-                pageNum:"",
+                pageNum:1,
                 pageSize:10,
-                total:""
+                total:0
             }
         }
     },

@@ -10,7 +10,9 @@ export default {
     },
     setCrumbList(state, router) {
         console.log('router', router)
-        let crumbList = router[1].meta.name.split('/')
-        state.crumbList = crumbList
+        if(router.length!="0"){
+            let crumbList = router[1].meta.name.split('/')
+            state.crumbList = crumbList
+        }
     },
 }

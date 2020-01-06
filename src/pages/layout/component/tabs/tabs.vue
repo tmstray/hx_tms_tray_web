@@ -90,6 +90,7 @@ export default {
         },
         // tab页签关闭事件
         onTabsRemoved(targetName) {
+            console.log(this.visitedViews)
             this.delView(targetName).then(res => {
                 let nextTab =
                     res.visitedViews[res.delIndex - 1] ||
@@ -97,6 +98,7 @@ export default {
                 console.log(nextTab)
                 if (nextTab) {
                     nextTab.name=nextTab.name.toLowerCase();
+                    console.log(nextTab.name)
                     this.$router.push({
                         name: nextTab.name,
                         params: nextTab.params,

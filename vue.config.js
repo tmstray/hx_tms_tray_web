@@ -12,10 +12,10 @@ function resolve(dir) {
     return path.join(__dirname, dir)
 }
 const proxyTargetMap = {
-    prod: 'http://10.248.61.27:9081', // 服务器
+    // prod: 'http://10.248.61.27:9081', // 服务器
     // prod: 'http://10.248.10.140:9081', // 本地环境
     // prod: 'http://10.248.10.141:9081', // 本地环境
-    // prod: 'http://10.248.10.34:9081', // 本地环境
+    prod: 'http://10.248.10.34:9081', // 本地环境
     // prod: 'http://10.248.24.82:8181',
     // prod: 'http://10.248.22.89:8080/tms-tray',
     randy: 'http://47.105.71.81:3306',
@@ -28,7 +28,6 @@ let dllPublishPath = '/vendor'
 module.exports = {
     publicPath: publicPath,
     outputDir: 'dist',
-
     // 放置静态资源的地方 (js/css/img/font/...)
     // assetsDir: '',
 
@@ -122,7 +121,8 @@ module.exports = {
                 changeOrigin: true,
                 pathRewrite: {
                     '^/': ''
-                }
+                },
+                ws: false,
             }
         },
         before: app => { }

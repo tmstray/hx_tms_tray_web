@@ -63,8 +63,10 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from, next) => {
     var routerList = to.matched
     console.log('matched', to.matched)
-    if (routerList[0].path === '/login') {
-        return
+    if(routerList.length!='0'){
+        if (routerList[0].path === '/login') {
+            return
+        }
     }
     store.commit('setCrumbList', routerList)
     // store.commit('permission/SET_CURRENT_MENU', to.name)

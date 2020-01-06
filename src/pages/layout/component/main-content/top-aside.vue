@@ -102,8 +102,10 @@ export default {
             this.$store.commit('toggleNavCollapse')
         },
         loginOut() {
-            this.$store.commit('LOGIN_OUT')
+            //this.$store.commit('LOGIN_OUT')
             this.$router.push({ path: '/login' })
+            console.log("1111")
+            window.localStorage.clear()
             /* 防止切换角色时addRoutes重复添加路由导致出现警告 */
             // window.location.reload()
         },

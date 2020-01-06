@@ -184,9 +184,9 @@ export default {
             searchObj:{
                 roleName:"",
                 roleKey:"",
-                pageNum:"",
+                pageNum:1,
                 pageSize:10,
-                total:""
+                total:0
             }
         }
     },
