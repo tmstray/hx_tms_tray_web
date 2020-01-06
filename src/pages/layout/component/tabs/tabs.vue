@@ -62,7 +62,8 @@ export default {
     },
     computed: {
         ...mapState('tagsView', ['visitedViews', 'cachedViews']),
-        ...mapState('permission', ['avatar', 'account'])
+        ...mapState('permission', ['avatar', 'account']),
+        ...mapState(['crumbList'])
     },
     created(){
         console.log(this.visitedViews)
@@ -80,8 +81,9 @@ export default {
         },
         // tab页签选中事件
         onTabSelect(selTab) {
-            console.log(this.visitedViews)
-            console.log(selTab)
+            
+            console.log(selTab.name)
+            
             this.$router.push({
                 name: selTab.name,
                 params: selTab.$attrs.params,
@@ -90,15 +92,14 @@ export default {
         },
         // tab页签关闭事件
         onTabsRemoved(targetName) {
-            console.log(this.visitedViews)
             this.delView(targetName).then(res => {
                 let nextTab =
                     res.visitedViews[res.delIndex - 1] ||
                     res.visitedViews[res.delIndex + 1]
-                console.log(nextTab)
                 if (nextTab) {
-                    nextTab.name=nextTab.name.toLowerCase();
-                    console.log(nextTab.name)
+                    if(nextTab.name == 'user' || nextTab.name == 'role' || nextTab.name == 'menu'){
+                        nextTab.name=nextTab.name.toLowerCase();
+                    }
                     this.$router.push({
                         name: nextTab.name,
                         params: nextTab.params,

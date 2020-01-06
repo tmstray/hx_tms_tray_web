@@ -174,6 +174,7 @@ const urlPort = 'http://10.248.61.27:9081'
 // const urlPort = 'http://10.248.10.141:9081'
 
 export default {
+    name:"emptytraymanage",
     data() {
         return {
             tableData: [],

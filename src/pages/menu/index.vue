@@ -91,28 +91,40 @@
                 <el-row :gutter="24">
                     <el-col :span="20">
                         <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
-                            <el-radio v-model="menuData.menuType" label="M" @change="change()">目录</el-radio>
-                            <el-radio v-model="menuData.menuType" label="C" @change="change()">菜单</el-radio>
-                            <el-radio v-model="menuData.menuType" label="F" @change="change()">按钮</el-radio>
+                            <el-radio-group v-model="menuType">
+                                <el-radio :label="'M'" @change="change()">目录</el-radio>
+                                <el-radio :label="'C'" @change="change()">菜单</el-radio>
+                                <el-radio :label="'F'" @change="change()">按钮</el-radio>
+                            </el-radio-group>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
-                    <el-col :span="10">
+                    <el-col :span="20">
                         <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
                             <el-input v-model="menuData.menuName" placeholder="请输入菜单名称"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="10">
+                    
+                </el-row>
+                <el-row :gutter='24'>
+                    <el-col :span="20">
                         <el-form-item label="显示排序" :label-width="formLabelWidth" prop="orderNum">
-                            <el-input-number v-model="menuData.orderNum" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
+                            <el-input-number style="width:100%;" v-model="menuData.orderNum" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
-                    <el-col :span="10">
-                        <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
-                            <el-input v-model="menuData.perms" placeholder="请输入权限标识"></el-input>
+                    <el-col :span="20">
+                        <el-form-item label="图标" :label-width="formLabelWidth" prop="icon">
+                            <el-input v-model="menuData.icon" placeholder="请输入权限标识"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="20">
+                        <el-form-item label="图标" :label-width="formLabelWidth" prop="icon">
+                            
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -187,7 +199,7 @@ export default {
             isDialog:false,
             formLabelWidth:"150px",
             menuData:{
-
+               
             },
             type:'',
             menuDialog:false,
@@ -198,10 +210,14 @@ export default {
             },
             menuId:"",
             filterText:"",
-            selectMenuId:"",
+            selectMenu:{
+                parentId:"",
+                menuName:""
+            },
             searchObj:{
                 menuName:""
-            }
+            },
+            menuType:'M'
         }
     },
     components: {
@@ -234,7 +250,8 @@ export default {
             return data.menuName.indexOf(value) !== -1;
         },
         handleNodeClick(data){
-            this.selectMenuId = data.menuId
+            this.selectMenu.parentId = data.menuId
+            this.selectMenu.menuName = data.menuName
         },
         focus1(){
             this.menuDialog=true
@@ -243,8 +260,8 @@ export default {
             this.menuDialog=false
         },
         sureParty(){
-            this.menuData.parentName = this.getParentName(this.selectMenuId).parentName
-            this.menuData.parentId = this.getParentName(this.selectMenuId).parentId
+            this.menuData.parentName = this.selectMenu.menuName
+            this.menuData.parentId = this.selectMenu.parentId
             this.menuDialog=false
         },
         handleCurrentChange(val) {
@@ -264,7 +281,6 @@ export default {
         },
         handleList() {
             getMenuList({}).then(res => {
-                console.log(res.data.data)
                 this.tableData = res.data.data
                 this.total = res.data.total
             })
@@ -335,7 +351,7 @@ export default {
             this.isDialog=false
         },
         change(){
-            console.log(this.menuData.menuType)
+            this.menuData.menuType=this.menuType
         },
         handleChange(){
 
@@ -384,6 +400,6 @@ export default {
     }
 }
 .el-input-number .el-input-number__decrease, .el-input-number .el-input-number__increase{
-        height: 37px !important;
+        height: 42px !important;
     }
 </style>

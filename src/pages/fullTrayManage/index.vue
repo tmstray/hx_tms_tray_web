@@ -94,6 +94,7 @@
 import { getStockLists, updateStockInfo } from '@/api/fullTrayManage.js'
 import DIC from '@/api/dic.js'
 export default {
+    name:"fulltraymanage",
     data() {
         return {
             tableData: [],
