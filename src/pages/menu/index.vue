@@ -105,7 +105,28 @@
                             <el-input v-model="menuData.menuName" placeholder="请输入菜单名称"></el-input>
                         </el-form-item>
                     </el-col>
-                    
+                </el-row>
+                <el-row :gutter="24" v-if="menuType=='C'">
+                    <el-col :span="20">
+                        <el-form-item label="请求地址" :label-width="formLabelWidth" prop="path">
+                            <el-input v-model="menuData.path" placeholder="请输入请求地址"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24" v-if="menuType=='C'">
+                    <el-col :span="20">
+                        <el-form-item label="是否外链" :label-width="formLabelWidth" prop="isFrame">
+                            <el-radio v-model="menuData.isFrame" label="0" @change="change2()">是</el-radio>
+                            <el-radio v-model="menuData.isFrame" label="1" @change="change2()">否</el-radio>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24" v-if="menuType=='C' || menuType == 'F'">
+                    <el-col :span="20">
+                        <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
+                            <el-input v-model="menuData.perms" placeholder="请输入权限标识"></el-input>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
                 <el-row :gutter='24'>
                     <el-col :span="20">
@@ -114,17 +135,18 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row :gutter="24">
+                <el-row :gutter="24" v-if="menuType != 'F'">
                     <el-col :span="20">
                         <el-form-item label="图标" :label-width="formLabelWidth" prop="icon">
-                            <el-input v-model="menuData.icon" placeholder="请输入权限标识"></el-input>
+                            <el-input v-model="menuData.icon" placeholder="请选择图标"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row :gutter="24">
+                <el-row :gutter="24" v-if="menuType != 'F'">
                     <el-col :span="20">
-                        <el-form-item label="图标" :label-width="formLabelWidth" prop="icon">
-                            
+                        <el-form-item label="菜单状态" :label-width="formLabelWidth" prop="visible">
+                            <el-radio v-model="menuData.visible" label="0" @change="change1()">显示</el-radio>
+                            <el-radio v-model="menuData.visible" label="1" @change="change1()">隐藏</el-radio>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -353,6 +375,12 @@ export default {
         change(){
             this.menuData.menuType=this.menuType
         },
+        change1(){
+            console.log(this.menuData.visible)
+        },
+        change2(){
+            console.log(this.menuData.isFrame)
+        },
         handleChange(){
 
         },
@@ -400,6 +428,6 @@ export default {
     }
 }
 .el-input-number .el-input-number__decrease, .el-input-number .el-input-number__increase{
-        height: 42px !important;
+        height: 37px !important;
     }
 </style>
