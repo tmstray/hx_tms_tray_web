@@ -18,10 +18,10 @@
             </el-row>
             <el-form :inline="true" class="searchBar">
                 <el-form-item label="手机号码:">
-                    <el-input v-model="searchObj.phonenumber"></el-input>
+                    <el-input v-model="searchObj.phonenumber" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="用户账号:">
-                    <el-input v-model="searchObj.userName"></el-input>
+                <el-form-item label="用户名:">
+                    <el-input v-model="searchObj.userName" clearable></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button

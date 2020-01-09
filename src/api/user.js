@@ -6,7 +6,7 @@ const urlLists = {
     updateUsers:"/system/user"
 }
 export const getUserLists = (params) => {
-    return http.post(urlLists.getUserList, params)
+    return http.get(urlLists.getUserList, params)
 }
 export const updateStockInfo = (params) => {
     return http.post(urlLists.updateStockInfo, params)

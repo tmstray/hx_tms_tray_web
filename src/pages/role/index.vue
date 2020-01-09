@@ -18,10 +18,10 @@
             </el-row>
             <el-form :inline="true" class="searchBar">
                 <el-form-item label="角色名称:">
-                    <el-input v-model="searchObj.roleName"></el-input>
+                    <el-input v-model="searchObj.roleName" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="角色权限:">
-                    <el-input v-model="searchObj.roleKey"></el-input>
+                <el-form-item label="权限字符:">
+                    <el-input v-model="searchObj.roleKey" clearable></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button

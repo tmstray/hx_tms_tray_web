@@ -22,7 +22,7 @@
                     v-if="!isStart"
                     @click="startCreateCode"
                     type="danger"
-                    icon="el-icon-video-play"
+                    icon="el-icon-video-play" 
                 >开始生成喷码</el-button>
                 <el-button v-else @click="endCreateCode" icon="el-icon-video-pause">结束生成喷码</el-button>
             </el-form-item>

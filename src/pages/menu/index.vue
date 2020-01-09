@@ -17,27 +17,9 @@
                 </el-col>
             </el-row>
             <el-form :inline="true" class="searchBar">
-                <el-form-item label="托盘流转状态:">
-                    <!-- <el-select v-model="rfidStatusVal" placeholder="请选择托盘流转状态">
-                        <el-option
-                            v-for="item in enum_rfidStatus"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
-                    </el-select> -->
-                    <el-input v-model="searchObj.menuName"></el-input>
+                <el-form-item label="菜单名称:">
+                    <el-input v-model="searchObj.menuName" clearable @clear="clear"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="托盘类型:">
-                    <el-select v-model="rfidTypeVal" placeholder="请选择托盘类型">
-                        <el-option
-                            v-for="item in enum_rfidType"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
-                    </el-select>
-                </el-form-item> -->
                 <el-form-item>
                     <el-button
                         type="primary"
@@ -61,23 +43,14 @@
             <el-table-column label="菜单名称" prop="menuName"></el-table-column>
             <el-table-column label="图标" prop="icon"></el-table-column>
             <el-table-column label="排序" prop="orderNum"></el-table-column>
-            <el-table-column label="可见" prop="visible"></el-table-column>
+            <!-- <el-table-column label="可见" prop="visible"></el-table-column> -->
             <el-table-column label="操作" width="80" fixed='right'>
                 <template slot-scope="scope">
                     <el-button type="text" @click="update(scope.row)">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination
-            background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="pageNum"
-            :page-size="pageSize"
-            :total="total"
-            :page-sizes="[10, 20, 30, 40]"
-            layout="total, sizes, prev, pager, next, jumper"
-        ></el-pagination>
+        
         <!-- 新增菜单 -->
         <el-dialog :title="title" :visible.sync="isDialog" :modal-append-to-body="false" :before-close="cancel" append-to-body :close-on-click-modal="false">
             <el-form :model="menuData"  ref="menuData" :rules="rules">
@@ -142,14 +115,14 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row :gutter="24" v-if="menuType != 'F'">
+                <!-- <el-row :gutter="24" v-if="menuType != 'F'">
                     <el-col :span="20">
                         <el-form-item label="菜单状态" :label-width="formLabelWidth" prop="visible">
                             <el-radio v-model="menuData.visible" label="0" @change="change1()">显示</el-radio>
                             <el-radio v-model="menuData.visible" label="1" @change="change1()">隐藏</el-radio>
                         </el-form-item>
                     </el-col>
-                </el-row>
+                </el-row> -->
                 <div style="margin-left:30%;">
                     <el-row :gutter="24" style="margin-top:29px;">
                         <el-col :span="12">
@@ -267,6 +240,10 @@ export default {
     },
     methods: {
         ...mapActions('tagsView', ['getAllMenus']),
+        clear(){
+            this.searchObj.menuName=""
+            this.search()
+        },
         filterNode(value, data) {
             if (!value) return true;
             return data.menuName.indexOf(value) !== -1;
@@ -308,7 +285,9 @@ export default {
             })
         },
         add(){
+            this.menuType='M'
             this.menuData = {}
+            this.menuData.menuType="M"
             this.type='add'
             this.isDialog=true
         },
@@ -352,6 +331,7 @@ export default {
                     if(res.status=='200'){
                         this.$message({type: 'success',message: '新增成功'});  
                         this.handleList()
+                        this.getAllMenus()
                         this.isDialog=false
                     }else{
                         this.$message({type: 'warning',message: res.data.msg});  

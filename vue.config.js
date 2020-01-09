@@ -122,7 +122,7 @@ module.exports = {
                 pathRewrite: {
                     '^/': ''
                 },
-                ws: false,
+                ws: true,
             }
         },
         before: app => { }

@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 import http from '@/config/httpConfig.js'
 export default {
     data() {
@@ -98,16 +98,15 @@ export default {
         ...mapState('permission', ['avatar', 'account']),
     },
     methods: {
+        ...mapActions('tagsView', ['removeViews','removeMenus']),
         toggleNavCollapse() {
             this.$store.commit('toggleNavCollapse')
         },
         loginOut() {
-            //this.$store.commit('LOGIN_OUT')
+            this.removeMenus()
+            this.removeViews()
             this.$router.push({ path: '/login' })
-            console.log("1111")
             window.localStorage.clear()
-            /* 防止切换角色时addRoutes重复添加路由导致出现警告 */
-            // window.location.reload()
         },
         handleCommand(item){
             if(item=='2'){

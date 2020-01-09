@@ -100,6 +100,12 @@ const tagsView = {
         },
         GEU_USER_ID:(state,payload)=>{
             state.userId = payload
+        },
+        REMOVE_VIEWS:(state)=>{
+            state.visitedViews = []
+        },
+        REMOVE_MENUS:(state)=>{
+            state.menus = []
         }
     },
     actions: {
@@ -230,6 +236,12 @@ const tagsView = {
         ,
         getUserId({commit},payload){
             commit('GEU_USER_ID',payload)
+        },
+        removeViews({commit}){
+            commit('REMOVE_VIEWS')
+        },
+        removeMenus({commit}){
+            commit('REMOVE_MENUS')
         }
     }
 }

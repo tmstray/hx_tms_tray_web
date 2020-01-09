@@ -71,9 +71,10 @@ export default {
     created() {
         this.activeTab = this.$route.name
         this.addView(this.$route)
+        this.removeViews()
     },
     methods: {
-        ...mapActions('tagsView', ['addView', 'delView']),
+        ...mapActions('tagsView', ['addView', 'delView','removeViews']),
         // 新增tab
         addTag() {
             this.addView(this.$route)

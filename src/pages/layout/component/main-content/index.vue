@@ -10,7 +10,7 @@
 import TopTabs from '../tabs/tabs'
 import TopAside from './top-aside'
 import Content from './content'
-import { mapState } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 
 export default {
     data() {
@@ -23,6 +23,11 @@ export default {
         TopAside,
         Content,
         TopTabs
+    },
+    methods:{
+        
+    },
+    mounted(){
     }
 }
 </script>

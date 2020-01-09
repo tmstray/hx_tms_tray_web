@@ -31,10 +31,6 @@
           class='iconfont'
           :class='v.meta.icon'
         ></i>
-        <!-- <svg-icon
-          v-if="v.meta&&v.meta.icon"
-          :icon-class="v.meta.icon"
-        ></svg-icon> -->
         <span slot="title">{{v.meta.title}}</span>
       </el-menu-item>
     </template>
@@ -55,7 +51,13 @@ export default {
     },
     methods: {
         gotoRoute(v) {
-            console.log('v', v)
+            //判断是否是当前路由
+            if(v.path=="home"){
+                this.$router.push({
+                    path: 'redirect',
+                    query: v.path
+                })
+            }
             var name = v.path
             // 像topTab添加标签
             this.addView(v)
@@ -68,9 +70,11 @@ export default {
         },
         ...mapActions('tagsView', ['addView'])
     },
-    created() {},
+    created() {
+    },
     computed: {
-        ...mapState('tagsView', ['visitedViews', 'cachedViews'])
+        ...mapState('tagsView', ['visitedViews', 'cachedViews']),
+        
     }
 }
 </script>

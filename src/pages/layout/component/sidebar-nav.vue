@@ -26,7 +26,7 @@ export default {
     computed: {
         ...mapState(['isSidebarNavCollapse']),
         ...mapState('permission', [ 'currentMenu']),
-        ...mapState('tagsView', [ 'menus']),
+        ...mapState('tagsView', [ 'menus','visitedViews']),
     },
     methods: {
 
@@ -35,7 +35,7 @@ export default {
         DynamicMenu
     },
     mounted(){
-        
+        console.log(this.visitedViews)
     },
     created(){
         if(this.menus.length=='0'){
@@ -45,7 +45,6 @@ export default {
                 }
             })
         }
-        
     }
 }
 </script>
