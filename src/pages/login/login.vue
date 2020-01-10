@@ -84,7 +84,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('tagsView', ['getUserId','getAllMenus']),
+        ...mapActions('tagsView', ['getUserId','getAllMenus','getUserInfo']),
         ...mapMutations('permission', ['SET_PERMISSION_LIST']),
         showPwd() {
             if (this.pwdType === 'password') {
@@ -114,7 +114,7 @@ export default {
         //获取菜单
         getMenus(){
             return new Promise((resolve,reject)=>{
-                this.getAllMenus()
+                // this.getAllMenus()
                 resolve('res')
             })
         },
@@ -122,10 +122,10 @@ export default {
         pageIn(){
             return new Promise((resolve,reject)=>{
                 http.get('getInfo').then(res=>{
-                    console.log(res.data.user.userId)
-                    console.log(res.data.user.userName)
                     localStorage.setItem('userId',res.data.user.userId)
                     localStorage.setItem('userName',res.data.user.userName)
+                    console.log(res.data)
+                    this.getUserInfo(res.data)
                     this.$router.replace('/')
                     resolve(res)
                 })

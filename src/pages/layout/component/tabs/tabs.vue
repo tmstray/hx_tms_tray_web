@@ -65,13 +65,13 @@ export default {
         ...mapState('permission', ['avatar', 'account']),
         ...mapState(['crumbList'])
     },
-    created(){
-        console.log(this.visitedViews)
-    },
     created() {
         this.activeTab = this.$route.name
         this.addView(this.$route)
         this.removeViews()
+        this.$router.push({
+            name:'home'
+        })
     },
     methods: {
         ...mapActions('tagsView', ['addView', 'delView','removeViews']),
@@ -82,9 +82,6 @@ export default {
         },
         // tab页签选中事件
         onTabSelect(selTab) {
-            
-            console.log(selTab.name)
-            
             this.$router.push({
                 name: selTab.name,
                 params: selTab.$attrs.params,

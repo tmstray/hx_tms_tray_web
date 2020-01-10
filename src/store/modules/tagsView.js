@@ -11,7 +11,10 @@ const tagsView = {
         cachedViews: [],
         delIndex: '',
         menus:[],
-        userId:""
+        userId:"",
+        userinfo:{
+
+        }
     },
     mutations: {
         ADD_VISITED_VIEW: (state, view) => {
@@ -93,10 +96,17 @@ const tagsView = {
             }
         },
         GET_ALL_MENUS:(state,payload)=>{
-            state.menus = []
-            for(let i=0;i<payload.length;i++){
-                state.menus.push(payload[i])
-            }
+            // state.menus = []
+            // Vue.$nextTick(()=>{
+            //     for(let i=0;i<payload.length;i++){
+            //         state.menus.push(payload[i])
+            //     }
+            //     state.menus = Array.from(new Set(state.menus))
+            // })
+            
+            // console.log(state.menus[3])
+            // console.log(state.menus[4])
+            // console.log(state.menus[5])
         },
         GEU_USER_ID:(state,payload)=>{
             state.userId = payload
@@ -106,6 +116,9 @@ const tagsView = {
         },
         REMOVE_MENUS:(state)=>{
             state.menus = []
+        },
+        GET_USER_INFO:(state,payload)=>{
+            state.userinfo = payload
         }
     },
     actions: {
@@ -242,6 +255,9 @@ const tagsView = {
         },
         removeMenus({commit}){
             commit('REMOVE_MENUS')
+        },
+        getUserInfo({commit},payload){
+            commit('GET_USER_INFO',payload)
         }
     }
 }

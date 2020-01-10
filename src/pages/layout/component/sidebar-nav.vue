@@ -26,7 +26,7 @@ export default {
     computed: {
         ...mapState(['isSidebarNavCollapse']),
         ...mapState('permission', [ 'currentMenu']),
-        ...mapState('tagsView', [ 'menus','visitedViews']),
+        ...mapState('tagsView', [ 'menus','visitedViews','userinfo']),
     },
     methods: {
 
@@ -35,10 +35,12 @@ export default {
         DynamicMenu
     },
     mounted(){
-        console.log(this.visitedViews)
+        console.log("我输出了",this.userinfo.permissions[0])
     },
     created(){
+        
         if(this.menus.length=='0'){
+            this.menus = []
             http.get('getRouters').then(res=>{
                 for(let i=0;i<res.data.data.length;i++){
                     this.menus.push(res.data.data[i])
