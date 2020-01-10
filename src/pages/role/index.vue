@@ -281,8 +281,9 @@ export default {
         confirm(){
             this.roleData.menuIds = []
             for(let i=0;i<this.$refs.tree.getCheckedNodes(false,true).length;i++){
-                 this.roleData.menuIds.push(this.$refs.tree.getCheckedNodes(false,true)[i])
+                 this.roleData.menuIds.push(this.$refs.tree.getCheckedNodes(false,true)[i].menuId)
             }
+            console.log(this.roleData.menuIds)
             if(this.type=='add'){
                 addRole(this.roleData).then(res=>{
                     if(res.status=='200'){

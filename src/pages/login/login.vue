@@ -114,7 +114,6 @@ export default {
         //获取菜单
         getMenus(){
             return new Promise((resolve,reject)=>{
-                // this.getAllMenus()
                 resolve('res')
             })
         },
