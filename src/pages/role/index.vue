@@ -283,8 +283,6 @@ export default {
             for(let i=0;i<this.$refs.tree.getCheckedNodes(false,true).length;i++){
                  this.roleData.menuIds.push(this.$refs.tree.getCheckedNodes(false,true)[i])
             }
-            console.log(this.roleData.menuIds);
-            return ;
             if(this.type=='add'){
                 addRole(this.roleData).then(res=>{
                     if(res.status=='200'){
