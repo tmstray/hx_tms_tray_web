@@ -36,6 +36,9 @@ export default {
     },
     mounted(){
         console.log("我输出了",this.userinfo.permissions[0])
+        this.userinfo.permissions.forEach((item)=>{
+            console.log(item)
+        })
     },
     created(){
         

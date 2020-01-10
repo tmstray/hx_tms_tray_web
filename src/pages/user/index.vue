@@ -63,7 +63,7 @@
         ></el-pagination>
 
         <!-- 新增用户 -->
-    <el-dialog :title="title" :visible.sync="isDialog" :modal-append-to-body="false" :before-close="handleClose" append-to-body :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="isDialog" :modal-append-to-body="false" :before-close="cancel" append-to-body :close-on-click-modal="false">
       <el-form :model="userData"  ref="userData" :rules="rules">
         <el-row :gutter="24">
           <el-col :span="12">
@@ -333,6 +333,7 @@ export default {
             
         },
         cancel(){
+            this.$refs.userData.resetFields()
             this.isDialog=false
         },
         handleCheckedCitiesChange(){

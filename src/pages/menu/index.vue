@@ -317,6 +317,7 @@ export default {
         },
         update(row){
             this.menuData = row
+            this.menuType = row.menuType
             this.menuData.parentName = this.getParentName(row.menuId).parentName
             this.menuData.parentId = this.getParentName(row.menuId).parentId
             this.type="update"
@@ -350,6 +351,7 @@ export default {
             }
         },
         cancel(){
+            this.$refs.menuData.resetFields()
             this.isDialog=false
         },
         change(){

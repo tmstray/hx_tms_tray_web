@@ -307,6 +307,7 @@ export default {
             }
         },
         cancel(){
+            this.$refs.roleData.resetFields()
             this.isDialog=false
         },
         handleChange(){
