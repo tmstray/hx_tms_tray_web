@@ -123,7 +123,7 @@ export default {
                 http.get('getInfo').then(res=>{
                     localStorage.setItem('userId',res.data.user.userId)
                     localStorage.setItem('userName',res.data.user.userName)
-                    console.log(res.data)
+                    localStorage.setItem('permission',JSON.stringify(res.data.permissions))
                     this.getUserInfo(res.data)
                     this.$router.replace('/')
                     resolve(res)

@@ -34,6 +34,7 @@
                     icon="el-icon-search"
                     class="searchBtn"
                     @click="handleList"
+                    v-if="isShowSearch"
                 >搜索</el-button>
             </el-form-item>
         </el-form>
@@ -52,6 +53,7 @@
                     <template slot-scope="scope">
                         <el-button
                             type="primary"
+                            v-if="isShowUpdate"
                             @click="handleUpdate(scope.row)"
                             :disabled="((parseInt(scope.row.rfidStatus))===3
                                     || (parseInt(scope.row.rfidStatus)===4))"
@@ -93,6 +95,7 @@
 <script>
 import { getStockLists, updateStockInfo } from '@/api/fullTrayManage.js'
 import DIC from '@/api/dic.js'
+import { isPermisson } from '@/utils/btnPermission'
 export default {
     name:"fulltraymanage",
     data() {
@@ -127,12 +130,16 @@ export default {
                     required: true,
                     message: '不能为空'
                 }
-            ]
+            ],
+            isShowSearch:true,
+            isShowUpdate:true
         }
     },
     components: {},
     created() {
         this.handleList()
+        this.isShowSearch = isPermisson("product:full:list")
+        this.isShowUpdate = isPermisson("product:full:modify")
     },
     methods: {
         handleCurrentChange(val) {

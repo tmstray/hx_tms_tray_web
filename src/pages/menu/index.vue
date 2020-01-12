@@ -7,11 +7,13 @@
                     <el-button
                         style="margin-left:10px;width:80px;height:30px;"
                         @click="add"
+                        v-if ='isShowAdd'
                     >新增</el-button>
                     <el-button
                         style="margin-left:10px;width:80px;height:30px;"
                         type="text"
                         @click="deleteMenu"
+                        v-if='isShowRemove'
                     >删除</el-button>
                     </div>
                 </el-col>
@@ -26,6 +28,7 @@
                         icon="el-icon-search"
                         class="searchBtn"
                         @click="search"
+                        v-if ='isShowSearch'
                     >搜索</el-button>
                 </el-form-item>
             </el-form>
@@ -46,7 +49,7 @@
             <!-- <el-table-column label="可见" prop="visible"></el-table-column> -->
             <el-table-column label="操作" width="80" fixed='right'>
                 <template slot-scope="scope">
-                    <el-button type="text" @click="update(scope.row)">修改</el-button>
+                    <el-button type="text" @click="update(scope.row)" v-if='isShowUpdate'>修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -176,6 +179,7 @@ import { getMenuList,addMenus,updateMenus } from '@/api/menu.js'
 import DIC from '@/api/dic.js'
 import http from '@/config/httpConfig.js'
 import { mapActions } from 'vuex'
+import { isPermisson } from '@/utils/btnPermission'
 export default {
     data() {
         return {
@@ -212,7 +216,11 @@ export default {
             searchObj:{
                 menuName:""
             },
-            menuType:'M'
+            menuType:'M',
+            isShowAdd:true,
+            isShowRemove:true,
+            isShowSearch:true,
+            isShowUpdate:true,
         }
     },
     components: {
@@ -237,6 +245,10 @@ export default {
     },
     created() {
         this.handleList()
+        this.isShowAdd = isPermisson("system:menu:add")
+        this.isShowRemove = isPermisson("system:menu:remove")
+        this.isShowSearch = isPermisson("system:menu:query")
+        this.isShowUpdate = isPermisson("system:menu:edit")
     },
     methods: {
         ...mapActions('tagsView', ['getAllMenus']),

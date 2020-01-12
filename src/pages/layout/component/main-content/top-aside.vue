@@ -31,7 +31,7 @@
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="1">个人中心</el-dropdown-item>
-                        <el-dropdown-item command="2">修改密码</el-dropdown-item>
+                        <el-dropdown-item command="2" v-if='isShow'>修改密码</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -82,6 +82,7 @@
 <script>
 import { mapState,mapActions } from 'vuex'
 import http from '@/config/httpConfig.js'
+import { isPermisson } from '@/utils/btnPermission'
 export default {
     data() {
         return {
@@ -90,7 +91,8 @@ export default {
             originPassword:"",
             newPassword:"",
             newpwdAgain:"",
-            userName:""
+            userName:"",
+            isShow:true,
         }
     },
     computed: {
@@ -140,6 +142,7 @@ export default {
     },
     mounted(){
         this.userName=localStorage.getItem('userName')
+        this.isShow = isPermisson("system:user:resetPwd")
     }
 }
 </script>

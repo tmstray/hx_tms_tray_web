@@ -26,7 +26,7 @@ export default {
     computed: {
         ...mapState(['isSidebarNavCollapse']),
         ...mapState('permission', [ 'currentMenu']),
-        ...mapState('tagsView', [ 'menus','visitedViews','userinfo']),
+        ...mapState('tagsView', [ 'menus','visitedViews']),
     },
     methods: {
 
@@ -35,10 +35,6 @@ export default {
         DynamicMenu
     },
     mounted(){
-        console.log("我输出了",this.userinfo.permissions[0])
-        this.userinfo.permissions.forEach((item)=>{
-            console.log(item)
-        })
     },
     created(){
         

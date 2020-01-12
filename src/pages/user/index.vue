@@ -7,11 +7,13 @@
                     <el-button
                         style="margin-left:10px;width:80px;height:30px;"
                         @click="add"
+                        v-if="isShowAdd"
                     >新增</el-button>
                     <el-button
                         style="margin-left:10px;width:80px;height:30px;"
                         type="text"
                         @click="deleteUser"
+                        v-if="isShowRemove"
                     >删除</el-button>
                     </div>
                 </el-col>
@@ -29,6 +31,7 @@
                         icon="el-icon-search"
                         class="searchBtn"
                         @click="search"
+                        v-if='isShowSearch'
                     >搜索</el-button>
                 </el-form-item>
             </el-form>
@@ -47,7 +50,7 @@
             </el-table-column>
             <el-table-column label="操作" width="80" fixed='right'>
                 <template slot-scope="scope">
-                    <el-button type="text" @click="update(scope.row)">修改</el-button>
+                    <el-button type="text" @click="update(scope.row)" v-if='isShowUpdate'>修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -168,6 +171,7 @@
 import { getUserLists ,addUser,deleteUsers,updateUsers} from '@/api/user.js'
 import http from '@/config/httpConfig.js'
 import DIC from '@/api/dic.js'
+import { isPermisson } from '@/utils/btnPermission'
 export default {
     data() {
         return {
@@ -202,7 +206,11 @@ export default {
                 pageNum:1,
                 pageSize:10,
                 total:0
-            }
+            },
+            isShowAdd:true,
+            isShowRemove:true,
+            isShowSearch:true,
+            isShowUpdate:true,
         }
     },
     components: {},
@@ -213,8 +221,12 @@ export default {
         }
     },
     created() {
-        this.search()
-        this.getRoleList()
+        this.search();
+        this.getRoleList();
+        this.isShowAdd = isPermisson("system:user:add")
+        this.isShowRemove = isPermisson("system:user:remove")
+        this.isShowSearch = isPermisson("system:user:query")
+        this.isShowUpdate = isPermisson("system:user:edit")
     },
     methods: {
         getStatus(row){

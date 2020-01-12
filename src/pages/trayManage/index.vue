@@ -29,6 +29,7 @@
                         icon="el-icon-search"
                         class="searchBtn"
                         @click="handleList"
+                        v-if="isShowSearch"
                     >搜索</el-button>
                 </el-form-item>
             </el-form>
@@ -71,6 +72,7 @@
 <script>
 import { getTrayLists, updateRow } from '@/api/trayManage'
 import DIC from '@/api/dic.js'
+import { isPermisson } from '@/utils/btnPermission'
 export default {
     data() {
         return {
@@ -84,12 +86,14 @@ export default {
             rfidTypeVal: 0,
             pageNum: 1,
             pageSize: 10,
-            total: 0
+            total: 0,
+            isShowSearch:true
         }
     },
     components: {},
     created() {
         this.handleList()
+        this.isShowSearch = isPermisson("query:query")
     },
     methods: {
         handleCurrentChange(val) {

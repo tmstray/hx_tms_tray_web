@@ -19,12 +19,12 @@
             </el-form-item>
             <el-form-item>
                 <el-button
-                    v-if="!isStart"
+                    v-if="!isStart && isShowStart"
                     @click="startCreateCode"
                     type="danger"
                     icon="el-icon-video-play" 
                 >开始生成喷码</el-button>
-                <el-button v-else @click="endCreateCode" icon="el-icon-video-pause">结束生成喷码</el-button>
+                <el-button v-if="isStart && isShowEnd" @click="endCreateCode" icon="el-icon-video-pause">结束生成喷码</el-button>
             </el-form-item>
         </el-form>
 
@@ -36,21 +36,21 @@
                         <p>当前喷码</p>
                         <p>{{inkjetPrinter.currentCode}}</p>
                         <p>
-                            <el-button type="danger" @click="openDialog">修改</el-button>
+                            <el-button type="danger" @click="openDialog" v-if="isShowCurrent">修改</el-button>
                         </p>
                     </div>
                     <div>
                         <p>已喷袋数</p>
                         <p>{{inkjetPrinter.currentNumber}}</p>
                         <p>
-                            <el-button type="danger" @click="openDialog2">修改</el-button>
+                            <el-button type="danger" @click="openDialog2" v-if="isShowUpdateNum">修改</el-button>
                         </p>
                     </div>
                     <div>
                         <p>喷码规则</p>
                         <p>{{rule|validateRule}}</p>
                         <p>
-                            <el-button type="danger" @click="openDialog3">更新</el-button>
+                            <el-button type="danger" @click="openDialog3" v-if="updateRule">更新</el-button>
                         </p>
                     </div>
                     <div>
@@ -132,7 +132,7 @@
                     :picker-options="pickerOptions"
                     value-format="yyyy-MM-dd"
                 ></el-date-picker>
-                <el-button type="danger" @click="handleLists">查询</el-button>
+                <el-button type="danger" @click="handleLists" v-if="firstBindList">查询</el-button>
             </div>
         </div>
         <el-table :data="tableData" border style="width: 100%" height="550">
@@ -242,6 +242,7 @@ import {
     startSchedule,
     endSchedule
 } from '@/api/index'
+import { isPermisson } from '@/utils/btnPermission'
 export default {
     components: {},
     data() {
@@ -318,7 +319,12 @@ export default {
                 }
             ],
             isStart: false,
-            timeInterval: ''
+            timeInterval: '',
+            isShowStart:true,
+            isShowEnd:true,
+            isShowCurrent:true,
+            updateRule:true,
+            firstBindList:true
         }
     },
     computed: {},
@@ -550,7 +556,14 @@ export default {
             }
         }
     },
-    mounted() {}
+    mounted() {
+        this.isShowStart = isPermisson("start")
+        this.isShowEnd = isPermisson("end")
+        this.isShowCurrent = isPermisson("updateCurrent")
+        this.isShowUpdateNum = isPermisson("updateNum")
+        this.updateRule = isPermisson("updateRule")
+        this.firstBindList = isPermisson("firstBindList")
+    }
 }
 </script>
 <style lang='scss'>

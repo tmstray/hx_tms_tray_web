@@ -5,6 +5,7 @@
                 type="primary"
                 class="el-button el-button--primary el-button--small"
                 @click="openDialog3"
+                v-if="isShowInit"
             >初始化</el-button>
             <el-button
                 class="el-button el-button--primary el-button--small"
@@ -61,6 +62,7 @@
                     icon="el-icon-search"
                     class="searchBtn"
                     @click="handleList"
+                    v-if="isShowSearch"
                 >搜索</el-button>
                 <el-button @click="resetForm('search')">重置</el-button>
             </el-form-item>
@@ -83,12 +85,13 @@
                 <el-table-column label="操作" fixed="right" align="center" width="300">
                     <template slot-scope="scope">
                         <el-button
+                            v-if="isShowDamaged"
                             type="primary"
                             @click="openDialog(scope.row)"
                             :disabled="!(parseInt(scope.row.rfidHealth) ===0)"
                         >报损</el-button>
-                        <el-button type="primary" @click="openDialog2(scope.row)">报废</el-button>
-                        <el-button type="primary" @click="forzenRowFun(scope.row)">冻结</el-button>
+                        <el-button type="primary" @click="openDialog2(scope.row)" v-if="isShowScrapped">报废</el-button>
+                        <el-button type="primary" @click="forzenRowFun(scope.row)" v-if="isShowForzen">冻结</el-button>
                     </template>
                 </el-table-column>
             </el-table-column>
@@ -170,6 +173,7 @@ import {
     exprotTemplate
 } from '@/api/emptyTrayManage.js'
 /** urlPort ：导入导出模板设置访问URL 上线时需要设置为服务器：TODO */
+import { isPermisson } from '@/utils/btnPermission'
 const urlPort = 'http://10.248.61.27:9081'
 // const urlPort = 'http://10.248.10.141:9081'
 
@@ -211,12 +215,22 @@ export default {
                 disabledDate(time) {
                     return time.getTime() > Date.now()
                 }
-            }
+            },
+            isShowSearch:true,
+            isShowDamaged:true,
+            isShowScrapped:true,
+            isShowForzen:true,
+            isShowInit:true
         }
     },
     components: {},
     created() {
         this.handleList()
+        this.isShowSearch = isPermisson("product:empty:list")
+        this.isShowDamaged = isPermisson("product:empty:damaged")
+        this.isShowScrapped = isPermisson("product:empty:scrapped")
+        this.isShowForzen = isPermisson("product:empty:forzen")
+        this.isShowInit = isPermisson("product:empty:init")
     },
     methods: {
         handleCurrentChange(val) {
