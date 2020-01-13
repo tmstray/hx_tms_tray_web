@@ -98,13 +98,16 @@ export default {
     computed: {
         ...mapState(['isSidebarNavCollapse', 'crumbList']),
         ...mapState('permission', ['avatar', 'account']),
+        ...mapState('tagsView', [ 'isclear']),
     },
     methods: {
-        ...mapActions('tagsView', ['removeViews','removeMenus']),
+        ...mapActions('tagsView', ['removeViews','removeMenus','clearTimer']),
         toggleNavCollapse() {
             this.$store.commit('toggleNavCollapse')
         },
         loginOut() {
+            this.clearTimer()
+            console.log(this.isclear)
             this.removeMenus()
             this.removeViews()
             this.$router.push({ path: '/login' })

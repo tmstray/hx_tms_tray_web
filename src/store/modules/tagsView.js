@@ -14,7 +14,8 @@ const tagsView = {
         userId:"",
         userinfo:{
 
-        }
+        },
+        isclear:""
     },
     mutations: {
         ADD_VISITED_VIEW: (state, view) => {
@@ -112,6 +113,9 @@ const tagsView = {
         },
         GET_USER_INFO:(state,payload)=>{
             state.userinfo = payload
+        },
+        CLEAR_TIMER:(state)=>{
+            window.clearInterval(state.isclear)
         }
     },
     actions: {
@@ -251,6 +255,10 @@ const tagsView = {
         },
         getUserInfo({commit},payload){
             commit('GET_USER_INFO',payload)
+        },
+        //退出时清除喷码页的定时器
+        clearTimer({commit}){
+            commit("CLEAR_TIMER")
         }
     }
 }

@@ -50,7 +50,7 @@
                         <p>喷码规则</p>
                         <p>{{rule|validateRule}}</p>
                         <p>
-                            <el-button type="danger" @click="openDialog3" v-if="updateRule">更新</el-button>
+                            <el-button type="danger" @click="openDialog3" v-if="isupdateRule">更新</el-button>
                         </p>
                     </div>
                     <div>
@@ -243,6 +243,7 @@ import {
     endSchedule
 } from '@/api/index'
 import { isPermisson } from '@/utils/btnPermission'
+import { mapState } from 'vuex'
 export default {
     components: {},
     data() {
@@ -323,11 +324,21 @@ export default {
             isShowStart:true,
             isShowEnd:true,
             isShowCurrent:true,
-            updateRule:true,
-            firstBindList:true
+            isupdateRule:true,
+            firstBindList:true,
+            isShowUpdateNum:true
         }
     },
-    computed: {},
+    computed: {
+        isclear:{
+            get(){
+                return this.$store.state.tagsView.isclear
+            },
+            set(val){
+                this.$store.state.tagsView.isclear = val
+            }
+        }
+    },
     filters: {
         validateRule(value) {
             if (!value) {
@@ -547,12 +558,12 @@ export default {
         isStart(val) {
             if (val) {
                 var that = this
-                this.timeInterval = setInterval(function() {
+                this.isclear = setInterval(function() {
                     that.getInkjetPrinterInfo()
                     that.getBindInfo()
                 }, 1000)
             } else {
-                window.clearInterval(this.timeInterval)
+                window.clearInterval(this.isclear)
             }
         }
     },
@@ -561,7 +572,7 @@ export default {
         this.isShowEnd = isPermisson("end")
         this.isShowCurrent = isPermisson("updateCurrent")
         this.isShowUpdateNum = isPermisson("updateNum")
-        this.updateRule = isPermisson("updateRule")
+        this.isupdateRule = isPermisson("updateRule")
         this.firstBindList = isPermisson("firstBindList")
     }
 }
