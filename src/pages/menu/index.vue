@@ -107,7 +107,7 @@
                 <el-row :gutter='24'>
                     <el-col :span="20">
                         <el-form-item label="显示排序" :label-width="formLabelWidth" prop="orderNum">
-                            <el-input-number style="width:100%;" v-model="menuData.orderNum" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
+                            <el-input-number style="width:100%;" v-model="orderNum" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -221,6 +221,7 @@ export default {
             isShowRemove:true,
             isShowSearch:true,
             isShowUpdate:true,
+            orderNum:1
         }
     },
     components: {
@@ -298,6 +299,7 @@ export default {
         },
         add(){
             this.menuType='M'
+            this.orderNum = 1
             this.menuData = {}
             this.menuData.menuType="M"
             this.type='add'
@@ -328,8 +330,9 @@ export default {
             });
         },
         update(row){
-            this.menuData = row
             this.menuType = row.menuType
+            this.orderNum = row.orderNum
+            this.menuData = row
             this.menuData.parentName = this.getParentName(row.menuId).parentName
             this.menuData.parentId = this.getParentName(row.menuId).parentId
             this.type="update"
@@ -339,6 +342,7 @@ export default {
             this.selectData=val
         },
         confirm(){
+            this.menuData.orderNum = this.orderNum
             if(this.type=='add'){
                 addMenus(this.menuData).then(res=>{
                     if(res.status=='200'){
@@ -363,7 +367,8 @@ export default {
             }
         },
         cancel(){
-            this.$refs.menuData.resetFields()
+            // this.$refs.menuData.resetFields()
+            this.search()
             this.isDialog=false
         },
         change(){
@@ -376,7 +381,7 @@ export default {
             console.log(this.menuData.isFrame)
         },
         handleChange(){
-
+            this.menuData.orderNum = this.orderNum
         },
         //获取上级菜单名称
         getParentName(menuId){

@@ -238,6 +238,7 @@ export default {
             this.search()
         },
         add(){
+            this.roleSort = 1
             this.roleData={}
             this.isDialog=true
             if(this.$refs.tree){
@@ -279,6 +280,8 @@ export default {
         },
         update(row){
             this.roleData=row
+            this.status = row.status
+            this.roleSort = row.roleSort
             http.get('system/menu/roleMenuTreeselect/'+row.roleId).then(res=>{
                 this.checkedList = []
                 if(this.$refs.tree){
@@ -292,6 +295,8 @@ export default {
             })
         },
         confirm(){
+            this.roleData.roleSort = this.roleSort
+            this.roleData.status = this.status
             this.roleData.menuIds = []
             for(let i=0;i<this.$refs.tree.getCheckedNodes(false,true).length;i++){
                  this.roleData.menuIds.push(this.$refs.tree.getCheckedNodes(false,true)[i].menuId)
@@ -319,7 +324,8 @@ export default {
             }
         },
         cancel(){
-            this.$refs.roleData.resetFields()
+            // this.$refs.roleData.resetFields()
+            this.search()
             this.isDialog=false
         },
         handleChange(){

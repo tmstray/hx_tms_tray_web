@@ -345,7 +345,8 @@ export default {
             
         },
         cancel(){
-            this.$refs.userData.resetFields()
+            // this.$refs.userData.resetFields()
+            this.search()
             this.isDialog=false
         },
         handleCheckedCitiesChange(){
