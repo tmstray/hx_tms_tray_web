@@ -35,7 +35,6 @@ const tagsView = {
                     myQuery: view.query
                 })
             )
-            console.log('visitedViews', state.visitedViews)
         },
         ADD_CACHED_VIEW: (state, view) => {
             if (state.cachedViews.includes(view.name)) return
@@ -122,7 +121,6 @@ const tagsView = {
         addView(state, view) {
             state.dispatch('addVisitedView', view)
             state.dispatch('addCachedView', view)
-            console.log('view', state.visitedViews)
         },
         addVisitedView({
             commit

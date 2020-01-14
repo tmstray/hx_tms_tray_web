@@ -110,7 +110,16 @@ export default {
         clearSuport(){
             return new Promise((resolve,reject)=>{
                 http.get('/transport/stop').then(res=>{
-                    resolve(res)
+                    if(res.data.code==200){
+                        resolve(res)
+                    }else{
+                        this.clearTimer()
+                        this.removeMenus()
+                        this.removeViews()
+                        this.$router.push({ path: '/login' })
+                        window.localStorage.clear()
+                        reject(res)
+                    }
                 })
             }) 
         },
@@ -132,7 +141,6 @@ export default {
         },
         handleCommand(item){
             if(item=='2'){
-                console.log(localStorage.getItem('userId'))
                 this.isDialog=true
             }
         },

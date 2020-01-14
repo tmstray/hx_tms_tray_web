@@ -45,7 +45,6 @@ let staticRotes = [
 
 
 /* 初始路由 */
-console.log('routesMap', staticRotes.concat(routesMap))
 var router = new Router({
     routes: staticRotes.concat(routesMap)
 })

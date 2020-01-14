@@ -20,9 +20,7 @@ for (var key in globalFilter) {
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-console.log('router', router)
 router.beforeEach((to, from, next) => {
-    console.log('---->',store.state.UserToken,to)
     
     if (!store.state.UserToken) {
         if (to.path === '/login') {
@@ -63,7 +61,6 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from, next) => {
     var routerList = to.matched
-    console.log('matched', to.matched)
     if(routerList.length!='0'){
         if (routerList[0].path === '/login') {
             return
@@ -74,7 +71,6 @@ router.afterEach((to, from, next) => {
 })
 
 /* eslint-disable no-new */
-console.log('router', router)
 new Vue({
     el: '#app',
     router,

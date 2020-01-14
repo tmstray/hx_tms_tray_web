@@ -83,15 +83,15 @@
                 <el-row :gutter="24">
                     <el-col :span="20">
                         <el-form-item label="角色顺序" :label-width="formLabelWidth" prop="roleSort">
-                            <el-input-number v-model="roleData.roleSort" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
+                            <el-input-number v-model="roleSort" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="20">
                         <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-                            <el-radio v-model="roleData.status" label="0" @change="change()">正常</el-radio>
-                            <el-radio v-model="roleData.status" label="1" @change="change()">停用</el-radio>
+                            <el-radio v-model="status" label="0" @change="change()">正常</el-radio>
+                            <el-radio v-model="status" label="1" @change="change()">停用</el-radio>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -170,7 +170,7 @@ export default {
             total: 0,
             type:'',
             roleData:{
-               
+                
             },
             isDialog:false,
             formLabelWidth:"150px",
@@ -196,6 +196,8 @@ export default {
             isShowRemove:true,
             isShowSearch:true,
             isShowUpdate:true,
+            status:"0",
+            roleSort:1
         }
     },
     components: {},
@@ -246,7 +248,6 @@ export default {
         //获取菜单列表
         getList(){
             getMenuList().then(res=>{
-                console.log(res)
                 this.menuList=res.data.data
             })
         },
@@ -295,7 +296,6 @@ export default {
             for(let i=0;i<this.$refs.tree.getCheckedNodes(false,true).length;i++){
                  this.roleData.menuIds.push(this.$refs.tree.getCheckedNodes(false,true)[i].menuId)
             }
-            console.log(this.roleData.menuIds)
             if(this.type=='add'){
                 addRole(this.roleData).then(res=>{
                     if(res.status=='200'){
@@ -323,10 +323,10 @@ export default {
             this.isDialog=false
         },
         handleChange(){
-
+            this.roleData.roleSort = this.roleSort
         },
         change(){
-
+            this.roleData.status = this.status
         },
         handleNodeClick(data){
            
