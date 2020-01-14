@@ -106,10 +106,16 @@ instance.interceptors.response.use(response => {
         }
         return Promise.reject(response)
     }
+    if (resCode == 401) {
+        Message.warning({
+            message: '授权失败，请重新登录'
+        })
+        return Promise.reject(response)
+    }
     if (resCode !== 200) {
-        // Message.warning({
-        //     message: msg
-        // })
+        Message.warning({
+            message: msg
+        })
         return Promise.reject(response)
     }
     return response
