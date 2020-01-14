@@ -6,10 +6,14 @@
 
 <script>
 // import Mycontent from './pages/layout/index.vue'
+import http from '@/config/httpConfig.js'
 export default {
     name: 'App',
     components: {
         // Mycontent
+    },
+    destroyed(){
+      http.get('/transport/stop').then(res=>{})
     }
 }
 </script>

@@ -8,6 +8,7 @@
                         :key="item.Z_ID"
                         :label="item.Z_Stock"
                         :value="item.Z_ID"
+                        @click.native="changeZ_ID(item)"
                     ></el-option>
                 </el-select>
             </el-form-item>
@@ -23,8 +24,8 @@
                     @click="startCreateCode"
                     type="danger"
                     icon="el-icon-video-play" 
-                >开始生成喷码</el-button>
-                <el-button v-if="isStart && isShowEnd" @click="endCreateCode" icon="el-icon-video-pause">结束生成喷码</el-button>
+                >开始计数</el-button>
+                <el-button v-if="isStart && isShowEnd" @click="endCreateCode" icon="el-icon-video-pause">停止计数</el-button>
             </el-form-item>
         </el-form>
 
@@ -240,7 +241,8 @@ import {
     updateBindInfo,
     addReason,
     startSchedule,
-    endSchedule
+    endSchedule,
+    getStatus
 } from '@/api/index'
 import { isPermisson } from '@/utils/btnPermission'
 import { mapState } from 'vuex'
@@ -326,7 +328,9 @@ export default {
             isShowCurrent:true,
             isupdateRule:true,
             firstBindList:true,
-            isShowUpdateNum:true
+            isShowUpdateNum:true,
+            z_id:"",
+            flag:false
         }
     },
     computed: {
@@ -337,7 +341,8 @@ export default {
             set(val){
                 this.$store.state.tagsView.isclear = val
             }
-        }
+        },
+
     },
     filters: {
         validateRule(value) {
@@ -358,6 +363,7 @@ export default {
             }).then(res => {
                 this.$message.success('开始喷码')
                 this.isStart = true
+                this.checkType()
             })
         },
         // 结束生成喷码
@@ -365,6 +371,7 @@ export default {
             endSchedule({}).then(res => {
                 this.$message.success('结束喷码')
                 this.isStart = false
+                this.checkType()
             })
         },
         // 获取生产线
@@ -392,7 +399,7 @@ export default {
         },
         // 获取喷码规则
         getPrinterRules() {
-            // console.log(this.formObj.lineId)
+            this.z_id=this.formObj.lineId
             getRules({
                 zId: this.formObj.lineId
             }).then(res => {
@@ -536,6 +543,25 @@ export default {
                     this.search.endTime = ''
                 }
             }
+        },
+        changeZ_ID(item){
+            if(item.Z_ID == this.z_id){
+                
+            }else{
+                this.endCreateCode()
+            }
+        },
+        //查看喷码机状态
+        checkType(){
+            getStatus().then(res=>{
+                this.flag = res.data.data
+                console.log(this.flag)
+                if(this.flag){
+                    this.isStart=true
+                }else{
+                     this.isStart=false
+                }
+            })
         }
     },
     created() {
@@ -568,6 +594,7 @@ export default {
         }
     },
     mounted() {
+        this.checkType()
         this.isShowStart = isPermisson("start")
         this.isShowEnd = isPermisson("end")
         this.isShowCurrent = isPermisson("updateCurrent")

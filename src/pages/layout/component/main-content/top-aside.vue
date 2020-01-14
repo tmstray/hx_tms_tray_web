@@ -83,6 +83,7 @@
 import { mapState,mapActions } from 'vuex'
 import http from '@/config/httpConfig.js'
 import { isPermisson } from '@/utils/btnPermission'
+import {endSchedule} from '@/api/index'
 export default {
     data() {
         return {
@@ -105,13 +106,29 @@ export default {
         toggleNavCollapse() {
             this.$store.commit('toggleNavCollapse')
         },
+        //清楚喷码状态
+        clearSuport(){
+            return new Promise((resolve,reject)=>{
+                http.get('/transport/stop').then(res=>{
+                    resolve(res)
+                })
+            }) 
+        },
+        //清楚localStorage中的值
+        clearUserMsg(){
+            return new Promise((resolve,reject)=>{
+                this.clearTimer()
+                this.removeMenus()
+                this.removeViews()
+                this.$router.push({ path: '/login' })
+                window.localStorage.clear()
+                resolve("ok")
+            })
+        },
         loginOut() {
-            this.clearTimer()
-            console.log(this.isclear)
-            this.removeMenus()
-            this.removeViews()
-            this.$router.push({ path: '/login' })
-            window.localStorage.clear()
+            this.clearSuport().then(data=>{
+                return this.clearUserMsg()
+            })
         },
         handleCommand(item){
             if(item=='2'){

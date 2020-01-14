@@ -11,8 +11,9 @@ const urlLists = {
     updateRule: '/spurtcodes/rule',
     updateBindInfo: '/first_bind',
     addReason: '/first_bind/scrap',
-    startSchedule: '/spurtcodes/start',
-    endSchedule: '/spurtcodes/stop'
+    startSchedule: '/transport/start',
+    endSchedule: '/transport/stop',
+    getStatus:"/transport/getStatus"
 }
 export const getProductLineLists = (params) => {
     return http.get(urlLists.getProductLineLists, params)
@@ -45,8 +46,11 @@ export const addReason = (params) => {
     return http.put(urlLists.addReason, params)
 }
 export const startSchedule = (params) => {
-    return http.put(urlLists.startSchedule, params)
+    return http.get(urlLists.startSchedule, params)
 }
 export const endSchedule = (params) => {
-    return http.put(urlLists.endSchedule, params)
+    return http.get(urlLists.endSchedule, params)
+}
+export const getStatus = (params) => {
+    return http.get(urlLists.getStatus, params)
 }
