@@ -12,7 +12,16 @@ export default {
     components: {
         // Mycontent
     },
-    destroyed(){
+    mounted(){
+      window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
+    },
+    methods:{
+       beforeunloadHandler(){
+        alert("1111111")
+      },
+    },
+    destroyed:function(){
+      window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
       http.get('/transport/stop').then(res=>{})
     }
 }

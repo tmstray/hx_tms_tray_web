@@ -369,7 +369,7 @@ export default {
         // 结束生成喷码
         endCreateCode() {
             endSchedule({}).then(res => {
-                this.$message.success('结束喷码')
+                // this.$message.success('结束喷码')
                 this.isStart = false
                 this.checkType()
             })
@@ -383,6 +383,7 @@ export default {
                     type: res.data.data[3].Z_Stock,
                     packageType: res.data.data[3].Z_PeerWeight
                 }
+                this.z_id=this.formObj.lineId
                 if (this.formObj.packageType !== 0) {
                     this.formObj.packageType += 'kg包装'
                 } else {
@@ -399,7 +400,7 @@ export default {
         },
         // 获取喷码规则
         getPrinterRules() {
-            this.z_id=this.formObj.lineId
+            
             getRules({
                 zId: this.formObj.lineId
             }).then(res => {
@@ -545,6 +546,8 @@ export default {
             }
         },
         changeZ_ID(item){
+            console.log(item.Z_ID)
+            console.log(this.z_id)
             if(item.Z_ID == this.z_id){
                 
             }else{

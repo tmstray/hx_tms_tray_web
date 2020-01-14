@@ -83,7 +83,7 @@
                 <el-row :gutter="24">
                     <el-col :span="20">
                         <el-form-item label="角色顺序" :label-width="formLabelWidth" prop="roleSort">
-                            <el-input-number v-model="roleData.roleSort" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
+                            <el-input-number v-model="roleData.roleSort" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -170,7 +170,7 @@ export default {
             total: 0,
             type:'',
             roleData:{
-
+               
             },
             isDialog:false,
             formLabelWidth:"150px",
