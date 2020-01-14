@@ -148,6 +148,7 @@ http.get = function (url, params, options) {
                 loading = document.getElementById('ajaxLoading')
                 loading.style.display = 'none'
                 if(e.data.code==401){
+                    window.localStorage.clear()
                     router.push({
                         path: '/login'
                       })
