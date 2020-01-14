@@ -110,16 +110,7 @@ export default {
         clearSuport(){
             return new Promise((resolve,reject)=>{
                 http.get('/transport/stop').then(res=>{
-                    if(res.data.code==200){
                         resolve(res)
-                    }else{
-                        this.clearTimer()
-                        this.removeMenus()
-                        this.removeViews()
-                        this.$router.push({ path: '/login' })
-                        window.localStorage.clear()
-                        reject(res)
-                    }
                 })
             }) 
         },

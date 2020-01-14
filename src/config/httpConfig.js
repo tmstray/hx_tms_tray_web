@@ -3,6 +3,7 @@ import store from '@/store/index.js'
 import baseURL from './baseUrl'
 import { Message } from 'element-ui'
 import { serialize } from '@/utils/util'
+import router from '@/router/index.js'
 const http = {}
 
 var instance = axios.create({
@@ -17,10 +18,10 @@ var instance = axios.create({
             Message.warning({
                 message: '授权失败，请重新登录'
             })
-            store.commit('LOGIN_OUT')
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
+            // store.commit('LOGIN_OUT')
+            // setTimeout(() => {
+            //     window.location.reload()
+            // }, 1000)
             return
         case 403:
             Message.warning({
@@ -106,9 +107,9 @@ instance.interceptors.response.use(response => {
         return Promise.reject(response)
     }
     if (resCode !== 200) {
-        Message.warning({
-            message: msg
-        })
+        // Message.warning({
+        //     message: msg
+        // })
         return Promise.reject(response)
     }
     return response
@@ -146,7 +147,11 @@ http.get = function (url, params, options) {
             .catch(e => {
                 loading = document.getElementById('ajaxLoading')
                 loading.style.display = 'none'
-                console.log(e)
+                if(e.data.code==401){
+                    router.push({
+                        path: '/login'
+                      })
+                }
             })
     })
 }
