@@ -109,9 +109,9 @@ export default {
         //清楚喷码状态
         clearSuport(){
             return new Promise((resolve,reject)=>{
-                http.get('/transport/stop').then(res=>{
-                        resolve(res)
-                })
+                // http.get('/transport/stop').then(res=>{
+                //         resolve(res)
+                // })
             }) 
         },
         //清楚localStorage中的值
