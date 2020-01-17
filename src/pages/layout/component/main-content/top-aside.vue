@@ -109,6 +109,7 @@ export default {
         //清楚喷码状态
         clearSuport(){
             return new Promise((resolve,reject)=>{
+                resolve("即将退出")
                 // http.get('/transport/stop').then(res=>{
                 //         resolve(res)
                 // })
