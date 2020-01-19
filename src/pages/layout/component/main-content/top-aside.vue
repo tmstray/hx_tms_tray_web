@@ -109,10 +109,13 @@ export default {
         //清楚喷码状态
         clearSuport(){
             return new Promise((resolve,reject)=>{
-                resolve("即将退出")
-                // http.get('/transport/stop').then(res=>{
-                //         resolve(res)
-                // })
+                http.post('/logout').then(res=>{
+                    if(res.status == 200){
+                        window.localStorage.clear()
+                        this.$router.push({ path: '/login' })
+                        resolve(res)
+                    }
+                })
             }) 
         },
         //清楚localStorage中的值
@@ -121,14 +124,12 @@ export default {
                 this.clearTimer()
                 this.removeMenus()
                 this.removeViews()
-                this.$router.push({ path: '/login' })
-                window.localStorage.clear()
                 resolve("ok")
             })
         },
         loginOut() {
-            this.clearSuport().then(data=>{
-                return this.clearUserMsg()
+            this.clearUserMsg().then(data=>{
+                return this.clearSuport()
             })
         },
         handleCommand(item){
