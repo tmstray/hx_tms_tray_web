@@ -109,7 +109,7 @@ export default {
         //清楚喷码状态
         clearSuport(){
             return new Promise((resolve,reject)=>{
-                http.post('/logout').then(res=>{
+                http.post('/system/logout').then(res=>{
                     if(res.status == 200){
                         window.localStorage.clear()
                         this.$router.push({ path: '/login' })
