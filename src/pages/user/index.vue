@@ -120,8 +120,8 @@
         <el-row :gutter="24">
             <el-col :span="12">
             <el-form-item label="状态" :label-width="formLabelWidth" prop="sex">
-                <el-radio v-model="userData.status" label="0" @change="change()">正常</el-radio>
-                <el-radio v-model="userData.status" label="1" @change="change()">停用</el-radio>
+                <el-radio v-model="status" label="0" @change="change()">正常</el-radio>
+                <el-radio v-model="status" label="1" @change="change()">停用</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -190,7 +190,7 @@ export default {
             isDialog:false,
             formLabelWidth:"150px",
             userData:{
-
+                // status:"0"
             },
             options:[
                 {label:"男",value:"0"},
@@ -211,6 +211,7 @@ export default {
             isShowRemove:true,
             isShowSearch:true,
             isShowUpdate:true,
+            status:"0",
         }
     },
     components: {},
@@ -311,12 +312,13 @@ export default {
             });
         },
         change(){
-
+            this.userData.status = this.status
         },
         selectSex(item){
                 
         },
         confirm(){
+            this.userData.status = this.status
             this.userData.roleIds=[]
             for(let i=0;i<this.checkedRoles.length;i++){
                 this.userData.roleIds.push(this.checkedRoles[i])
