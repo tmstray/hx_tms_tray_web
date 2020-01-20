@@ -50,7 +50,7 @@
               <el-row :gutter="24">
                 <el-col :span="18">
                   <el-form-item label="原密码" :label-width="formLabelWidth">
-                    <el-input v-model="originPassword"></el-input>
+                    <el-input v-model="originPassword" :type="'password'"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
